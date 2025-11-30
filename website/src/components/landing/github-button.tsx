@@ -5,7 +5,7 @@ function useFetchStarsCount() {
 	const [starsCount, setStarsCount] = useState<number | null>(undefined);
 
 	useEffect(() => {
-		fetch("https://api.github.com/repos/TheEdoRan/next-safe-action")
+		fetch("https://api.github.com/repos/bhargavponnapalli/next-cool-action")
 			.then((res) =>
 				res.json().then((data) => {
 					if (typeof data.stargazers_count === "number") {
@@ -24,7 +24,7 @@ export function GitHubButton() {
 
 	return (
 		<a
-			href="https://github.com/TheEdoRan/next-safe-action"
+			href="https://github.com/bhargavponnapalli/next-cool-action"
 			target="_blank"
 			rel="noopener noreferrer"
 			className="inline-flex cursor-pointer items-center justify-center gap-x-1 rounded-lg bg-zinc-100 px-4 py-2 text-sm font-bold !text-zinc-800 !no-underline shadow-lg transition-transform hover:translate-y-[-2px] md:text-base"

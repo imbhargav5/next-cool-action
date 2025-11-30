@@ -1,7 +1,7 @@
 "use server";
 
 import { action } from "@/lib/safe-action";
-import { flattenValidationErrors, returnValidationErrors } from "next-safe-action";
+import { flattenValidationErrors, returnValidationErrors } from "next-cool-action";
 import { z } from "zod";
 
 const schema = z.object({

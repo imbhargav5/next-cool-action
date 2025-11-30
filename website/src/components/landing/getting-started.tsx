@@ -13,7 +13,7 @@ export function GettingStarted() {
 						Ready to get started?
 					</h2>
 					<p className="mx-auto mb-12 max-w-xl text-sm text-zinc-600 sm:text-base dark:text-zinc-400">
-						Explore the documentation to learn how to use next-safe-action in your Next.js projects. Whether you're a
+						Explore the documentation to learn how to use next-cool-action in your Next.js projects. Whether you're a
 						beginner or already experienced with it, we've got you covered with comprehensive guides and examples.
 					</p>
 					<div className="flex flex-wrap items-center justify-center gap-4">
@@ -24,7 +24,7 @@ export function GettingStarted() {
 							Read the docs
 						</a>
 						<a
-							href="https://next-safe-action-playground.vercel.app/"
+							href="https://next-cool-action-playground.vercel.app/"
 							className="inline-flex cursor-pointer items-center justify-center rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 px-6 py-3 text-base font-semibold !text-white !no-underline transition-all hover:translate-y-[-2px] hover:shadow-lg md:text-lg"
 							target="_blank"
 							rel="noopener noreferrer"

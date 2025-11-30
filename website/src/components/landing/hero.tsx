@@ -17,7 +17,7 @@ export function Hero() {
 									{siteConfig.tagline}
 								</h1>
 								<h2 className="max-w-xl text-base font-medium leading-relaxed text-zinc-700 md:text-lg dark:text-zinc-300">
-									next-safe-action handles your Next.js app mutations type safety, input/output validation, server
+									next-cool-action handles your Next.js app mutations type safety, input/output validation, server
 									errors and even more!
 								</h2>
 							</div>

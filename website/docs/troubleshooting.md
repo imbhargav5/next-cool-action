@@ -1,13 +1,13 @@
 ---
 sidebar_position: 8
-description: Troubleshoot common issues with next-safe-action.
+description: Troubleshoot common issues with next-cool-action.
 ---
 
 # Troubleshooting
 
 ## TypeSchema issues (pre v7.2.0)
 
-**NOTE**: next-safe-action used TypeSchema up to version 7.1.3. If you use version 7.2.0 or later, these issues are fixed.
+**NOTE**: next-cool-action used TypeSchema up to version 7.1.3. If you use version 7.2.0 or later, these issues are fixed.
 
 ### `Schema` and `parsedInput` are typed `any` (broken types) and build issues
 
@@ -21,7 +21,7 @@ TypeSchema enables support for many validation libraries, via adapters. However,
 
 ## TypeScript error in monorepo
 
-If you use next-safe-action in a monorepo, you'll likely experience this error:
+If you use next-cool-action in a monorepo, you'll likely experience this error:
 
 ```
 Type error: The inferred type of 'action' cannot be named without a reference to '...'. This is likely not portable. A type annotation is necessary.
@@ -38,4 +38,4 @@ You can set this option in your `tsconfig.json` to remove the error:
 }
 ```
 
-Find more information about this in [this issue](https://github.com/TheEdoRan/next-safe-action/issues/64) on GitHub.
+Find more information about this in [this issue](https://github.com/bhargavponnapalli/next-cool-action/issues/64) on GitHub.

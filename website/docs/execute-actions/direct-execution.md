@@ -15,7 +15,7 @@ The first way to execute Server Actions inside Client Components is by importing
 "use server";
 
 import { actionClient } from "@/lib/safe-action";
-import { returnValidationErrors } from "next-safe-action";
+import { returnValidationErrors } from "next-cool-action";
 import { z } from "zod";
 
 const inputSchema = z.object({
@@ -61,4 +61,4 @@ export default function Login() {
 
 Every action you execute returns an object with the same structure. This is described in the [action result object](/docs/define-actions/action-result-object) section.
 
-Explore a working example [here](<https://github.com/TheEdoRan/next-safe-action/tree/main/apps/playground/src/app/(examples)/direct>).
+Explore a working example [here](<https://github.com/bhargavponnapalli/next-cool-action/tree/main/apps/playground/src/app/(examples)/direct>).

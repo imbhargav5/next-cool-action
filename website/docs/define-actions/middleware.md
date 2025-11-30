@@ -5,7 +5,7 @@ description: Learn how to use middleware functions in your actions.
 
 # Middleware
 
-next-safe-action, since version 7, ships with a composable and powerful middleware system, which allows you to create functions for almost every kind of use case you can imagine (authorization, logging, role based access, etc.). It works very similarly to the [tRPC implementation](https://trpc.io/docs/server/middlewares).
+next-cool-action, since version 7, ships with a composable and powerful middleware system, which allows you to create functions for almost every kind of use case you can imagine (authorization, logging, role based access, etc.). It works very similarly to the [tRPC implementation](https://trpc.io/docs/server/middlewares).
 
 Middleware functions are defined using [`use`](/docs/define-actions/instance-methods#use) method in your action clients, via the `middlewareFn` argument.
 
@@ -23,7 +23,7 @@ Here we'll use a logging middleware in the base client and then extend it with a
 import {
   createSafeActionClient,
   DEFAULT_SERVER_ERROR_MESSAGE,
-} from "next-safe-action";
+} from "next-cool-action";
 import { cookies } from "next/headers";
 import { z } from "zod";
 import { getUserIdFromSessionId } from "./db";
@@ -176,7 +176,7 @@ Context is a special object that holds information about the current execution s
 Starting from version 7.6.0, context is extended by default when defining middleware functions. For instance, if you want both the `sessionId` and `userId` in the context, by using two different middleware functions (trivial example), you can do it like this:
 
 ```typescript title="src/lib/safe-action.ts"
-import { createSafeActionClient } from "next-safe-action";
+import { createSafeActionClient } from "next-cool-action";
 
 export const actionClient = createSafeActionClient()
   .use(async ({ next }) => {
@@ -218,7 +218,7 @@ Thanks to this feature, and the previously mentioned [context extension](#extend
 Here's how to use `createMiddleware()`:
 
 ```typescript title="src/lib/safe-action.ts"
-import { createSafeActionClient, createMiddleware } from "next-safe-action";
+import { createSafeActionClient, createMiddleware } from "next-cool-action";
 import { z } from "zod";
 
 export const actionClient = createSafeActionClient({

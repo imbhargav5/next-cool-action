@@ -94,7 +94,7 @@ export class ActionBindArgsValidationError extends Error {
  * @param schema Input schema
  * @param validationErrors Validation errors object
  *
- * {@link https://next-safe-action.dev/docs/define-actions/validation-errors#returnvalidationerrors See docs for more information}
+ * {@link https://next-cool-action.dev/docs/define-actions/validation-errors#returnvalidationerrors See docs for more information}
  */
 export function returnValidationErrors<
 	S extends StandardSchemaV1 | (() => Promise<StandardSchemaV1>),
@@ -118,7 +118,7 @@ export function formatValidationErrors<VE extends ValidationErrors<any>>(validat
  * Emulation of `zod`'s [`flatten`](https://zod.dev/ERROR_HANDLING?id=flattening-errors) function.
  * @param {ValidationErrors} [validationErrors] Validation errors object
  *
- * {@link https://next-safe-action.dev/docs/define-actions/validation-errors#flattenvalidationerrorsutility-function See docs for more information}
+ * {@link https://next-cool-action.dev/docs/define-actions/validation-errors#flattenvalidationerrorsutility-function See docs for more information}
  */
 export function flattenValidationErrors<VE extends ValidationErrors<any>>(validationErrors: VE) {
 	const flattened: FlattenedValidationErrors<VE> = {

@@ -1,17 +1,17 @@
 ---
 sidebar_position: 1
-description: Learn how to infer types with next-safe-action.
+description: Learn how to infer types with next-cool-action.
 ---
 
 # Infer types
 
-next-safe-action, since version 7.6.4, exports utility types for type inference. Here's a guide on how to use them.
+next-cool-action, since version 7.6.4, exports utility types for type inference. Here's a guide on how to use them.
 
 Suppose we have declared this safe action client:
 
 ```typescript title="src/lib/safe-action.ts"
 import { z } from "zod";
-import { createSafeActionClient, createMiddleware } from "next-safe-action";
+import { createSafeActionClient, createMiddleware } from "next-cool-action";
 import { getSessionData } from "@/services/auth"
 
 // Here we declare a standalone auth middleware.
@@ -84,7 +84,7 @@ We'll use these exported functions in the following examples.
 
 The library exports several utility types from the root path that help you infer types of a safe action client, a middleware function or a safe action function.
 
-Here's the list of utility types exported from `next-safe-action` path:
+Here's the list of utility types exported from `next-cool-action` path:
 - `InferSafeActionFnInput`: infer input types of a safe action function
 - `InferSafeActionFnResult`: infer result type of a safe action function
 - `InferMiddlewareFnNextCtx`: infer the type of context returned by a middleware function using the `next` function
@@ -102,7 +102,7 @@ import type {
   InferSafeActionFnInput,
   InferSafeActionFnResult,
   InferServerError,
-} from "next-safe-action";
+} from "next-cool-action";
 import type { actionClient, authMiddleware } from "@/lib/safe-action";
 import type { testAction } from "@/app/test-action";
 
@@ -190,7 +190,7 @@ type inferredServerError = InferServerError<typeof testAction>;
 
 The library also exports three types from the `/hooks` path that help you infer types when using `useAction`, `useOptimisticAction` and `useStateAction` hooks.
 
-Here's a list of utility types exported from `next-safe-action/hooks`:
+Here's a list of utility types exported from `next-cool-action/hooks`:
 
 - `InferUseActionHookReturn`: infers the return type of the `useAction` hook - only works with actions defined using the [`action`](/docs/define-actions/instance-methods#action--stateaction) method
 - `InferUseOptimisticActionHookReturn`: infers the return type of the `useOptimisticAction` hook - only works with stateless actions defined using the [`action`](/docs/define-actions/instance-methods#action--stateaction) method

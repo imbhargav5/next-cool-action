@@ -1,4 +1,4 @@
-import type { HookActionStatus } from "next-safe-action/hooks";
+import type { HookActionStatus } from "next-cool-action/hooks";
 
 type Props = {
 	result?: any;

@@ -402,15 +402,15 @@ export function actionBuilder<
 		 * Define the action.
 		 * @param serverCodeFn Code that will be executed on the **server side**
 		 *
-		 * {@link https://next-safe-action.dev/docs/define-actions/instance-methods#action--stateaction See docs for more information}
+		 * {@link https://next-cool-action.dev/docs/define-actions/instance-methods#action--stateaction See docs for more information}
 		 */
 		action: buildAction({ withState: false }).action,
 
 		/**
-		 * Define the stateful action. To be used with the [`useStateAction`](https://next-safe-action.dev/docs/execute-actions/hooks/usestateaction) hook.
+		 * Define the stateful action. To be used with the [`useStateAction`](https://next-cool-action.dev/docs/execute-actions/hooks/usestateaction) hook.
 		 * @param serverCodeFn Code that will be executed on the **server side**
 		 *
-		 * {@link https://next-safe-action.dev/docs/define-actions/instance-methods#action--stateaction See docs for more information}
+		 * {@link https://next-cool-action.dev/docs/define-actions/instance-methods#action--stateaction See docs for more information}
 		 */
 		stateAction: buildAction({ withState: true }).action,
 	};

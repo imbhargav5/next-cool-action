@@ -1,4 +1,4 @@
-# Contributing to next-safe-action
+# Contributing to next-cool-action
 
 Code contributions are very welcome, so if you decide to help improve the library code, thank you! First of all, though, please read the guidelines below.
 
@@ -26,15 +26,15 @@ This is a monorepo, that uses:
 
 ### Repository structure
 
-- [`packages/next-safe-action`](./packages/next-safe-action): contains the source code of the library;
+- [`packages/next-cool-action`](./packages/next-cool-action): contains the source code of the library;
 - [`apps/playground`](./apps/playground): contains the source code of the Next.js playground app, which is a basic implementation of the library;
-- [`website`](./website): contains the source code of the [next-safe-action website](https://next-safe-action.dev).
+- [`website`](./website): contains the source code of the [next-cool-action website](https://next-cool-action.dev).
 
 ## How to contribute
 
 ### Getting started
 
-Before opening a pull request, please follow the general rule of **opening an issue or discussion first**, using the [issue templates](https://github.com/TheEdoRan/next-safe-action/issues/new/choose), that will guide you through the process. You can avoid opening a new issue or discussion if:
+Before opening a pull request, please follow the general rule of **opening an issue or discussion first**, using the [issue templates](https://github.com/bhargavponnapalli/next-cool-action/issues/new/choose), that will guide you through the process. You can avoid opening a new issue or discussion if:
 
 - You're correcting a trivial error, like a typo;
 - The issue or discussion for the bug you're fixing/feature you're implementing with the PR is already open.
@@ -58,7 +58,7 @@ pnpm run build:lib && pnpm run pg
 
 If you updated user facing APIs of the library, you're **not required**, but **highly incouraged** to:
 - update [the documentation](./website/docs) of the library to reflect the changes you've made.
-- write tests for the changes you've made. They should be placed in the appropriate file inside [`__tests__`](./packages/next-safe-action/src/__tests__) directory (`next-safe-action` package).
+- write tests for the changes you've made. They should be placed in the appropriate file inside [`__tests__`](./packages/next-cool-action/src/__tests__) directory (`next-cool-action` package).
 
 These steps can be done in later stages of the PR too, for instance when a maintainer already approved your code updates.
 

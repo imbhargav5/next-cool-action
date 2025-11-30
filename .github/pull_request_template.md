@@ -8,4 +8,4 @@ re #
 
 ---
 
-- [ ] I read the [contributing guidelines](https://github.com/TheEdoRan/next-safe-action/blob/next/CONTRIBUTING.md) and followed them before creating this pull request.
+- [ ] I read the [contributing guidelines](https://github.com/bhargavponnapalli/next-cool-action/blob/next/CONTRIBUTING.md) and followed them before creating this pull request.

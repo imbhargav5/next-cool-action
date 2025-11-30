@@ -16,7 +16,7 @@ const getPmInstall = (pm: PackageManager) => {
 	}
 };
 
-const libName = "next-safe-action";
+const libName = "next-cool-action";
 
 type Props = {
 	className?: string;

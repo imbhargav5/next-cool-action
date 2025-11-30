@@ -1,20 +1,20 @@
 {
-	"name": "next-safe-action-monorepo",
-	"version": "0.0.0",
+	"name": "next-cool-action-monorepo",
+	"version": "1.0.0",
 	"private": true,
-	"description": "next-safe-action monorepo",
+	"description": "next-cool-action monorepo",
 	"scripts": {
 		"prepare": "is-ci || husky",
 		"pg": "turbo run dev --filter=@apps/playground",
 		"lint": "turbo run lint",
 		"build": "turbo run build",
-		"test:lib": "turbo run test --filter=next-safe-action",
-		"lint:lib": "turbo run lint --filter=next-safe-action",
-		"build:lib": "turbo run build --filter=next-safe-action --force",
-		"deploy:lib": "turbo run deploy --filter=next-safe-action",
+		"test:lib": "turbo run test --filter=next-cool-action",
+		"lint:lib": "turbo run lint --filter=next-cool-action",
+		"build:lib": "turbo run build --filter=next-cool-action --force",
+		"deploy:lib": "turbo run deploy --filter=next-cool-action",
 		"build:pg": "turbo run build --filter=@apps/playground --force"
 	},
-	"author": "Edoardo Ranghieri",
+	"author": "Bhargav Ponnapalli",
 	"license": "MIT",
 	"engines": {
 		"node": ">=18.17"
@@ -26,7 +26,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/TheEdoRan/next-safe-action.git"
+		"url": "https://github.com/bhargavponnapalli/next-cool-action.git"
 	},
 	"dependencies": {
 		"@commitlint/cli": "^19.7.1",

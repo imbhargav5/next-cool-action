@@ -7,7 +7,7 @@ description: Learn how to customize or manually creating validation errors.
 
 ## Customize validation errors format
 
-next-safe-action, by default, emulates Zod's [`format()`](https://zod.dev/ERROR_HANDLING?id=formatting-errors) method for building both validation and bind args validation errors and return them to the client.
+next-cool-action, by default, emulates Zod's [`format()`](https://zod.dev/ERROR_HANDLING?id=formatting-errors) method for building both validation and bind args validation errors and return them to the client.
 
 This can be customized both at the safe action client level and at the action level by:
 - using [`defaultValidationErrorsShape`](/docs/define-actions/create-the-client#defaultvalidationerrorsshape) optional property in `createSafeActionClient()`;
@@ -21,7 +21,7 @@ For example, if you want to flatten the validation errors (emulation of Zod's [`
 "use server";
 
 import { actionClient } from "@/lib/safe-action";
-import { flattenValidationErrors } from "next-safe-action";
+import { flattenValidationErrors } from "next-cool-action";
 import { z } from "zod";
 
 const inputSchema = z.object({
@@ -120,7 +120,7 @@ If the two fields don't match, a custom validation error will be set for the `co
 When registering a new user, we also need to check if the email is already stored in the database, and if so, inform the user that that address is taken by someone else. The best place to make this check is inside the action's server code function. If we find out that the email is already taken by another user, we can return a custom validation error to the client using `returnValidationErrors()`:
 
 ```typescript
-import { returnValidationErrors } from "next-safe-action";
+import { returnValidationErrors } from "next-cool-action";
 import { actionClient } from "@/lib/safe-action";
 
 // Here we're using the same schema declared above.
@@ -146,7 +146,7 @@ Note that:
 
 - You're required to pass a schema as the first argument of `returnValidationErrors()`. This is used to infer the type of the validation errors set via the second argument.
 - Errors set using `returnValidationErrors()` will not be merged with the schema ones. If schema validation fails, the execution stops before reaching action's server code function. Otherwise, the action's backend code would receive invalid parsed input.
-- `returnValidationErrors()` returns `never`. This means that internally it throws an error that gets caught and processed by next-safe-action, so code declared below the `returnValidationErrors()` invocation will not be executed.
+- `returnValidationErrors()` returns `never`. This means that internally it throws an error that gets caught and processed by next-cool-action, so code declared below the `returnValidationErrors()` invocation will not be executed.
 - Since it returns `never`, you don't need to use `return` before this function call, and you can call it only once per execution path (it works the same way as Next.js `redirect()` and `notFound()` functions).
 
 ### `throwValidationErrors`

@@ -1,6 +1,6 @@
 ---
 sidebar_position: 9
-description: Learn how to upload a file using next-safe-action.
+description: Learn how to upload a file using next-cool-action.
 ---
 
 # Upload files
@@ -45,7 +45,7 @@ export const fileUploadAction = action
 ```tsx title="file-upload.tsx"
 "use client";
 
-import { useAction } from "next-safe-action/hooks";
+import { useAction } from "next-cool-action/hooks";
 import { fileUploadAction } from "./file-upload-action";
 
 export default function FileUploadPage() {

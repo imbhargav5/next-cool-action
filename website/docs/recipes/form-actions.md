@@ -1,11 +1,11 @@
 ---
 sidebar_position: 2
-description: Learn how to use next-safe-action with form actions.
+description: Learn how to use next-cool-action with form actions.
 ---
 
 # Form actions
 
-You can utilize Server Actions as form actions too. next-safe-action allows you to define _stateful_ or _stateless_ form actions.
+You can utilize Server Actions as form actions too. next-cool-action allows you to define _stateful_ or _stateless_ form actions.
 
 ### `FormData` input
 
@@ -46,7 +46,7 @@ export const statelessFormAction = actionClient
 ```tsx title="stateless-form.tsx"
 "use client";
 
-import { useAction } from "next-safe-action/hooks";
+import { useAction } from "next-cool-action/hooks";
 import { statelessFormAction } from "./stateless-form-action";
 
 export default function StatelessForm() {
@@ -63,7 +63,7 @@ export default function StatelessForm() {
 }
 ```
 
-You can also find this example in the playground app: [stateless form action](https://github.com/TheEdoRan/next-safe-action/tree/main/apps/playground/src/app/(examples)/stateless-form) example.
+You can also find this example in the playground app: [stateless form action](https://github.com/bhargavponnapalli/next-cool-action/tree/main/apps/playground/src/app/(examples)/stateless-form) example.
 
 ## Stateful form actions
 
@@ -147,4 +147,4 @@ export default function StatefulForm() {
 }
 ```
 
-You can also find this example in the playground app: [stateful form action](https://github.com/TheEdoRan/next-safe-action/tree/main/apps/playground/src/app/(examples)/stateful-form) example.
+You can also find this example in the playground app: [stateful form action](https://github.com/bhargavponnapalli/next-cool-action/tree/main/apps/playground/src/app/(examples)/stateful-form) example.

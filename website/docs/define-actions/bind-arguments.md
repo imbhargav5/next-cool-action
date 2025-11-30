@@ -7,7 +7,7 @@ description: Learn how to pass additional arguments to your actions.
 
 Next.js allows you to [pass additional arguments to your actions by using the `bind` method](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations#passing-additional-arguments). This method supports Progressive Enhancement.
 
-next-safe-action exposes a [`bindArgsSchemas` method](/docs/define-actions/instance-methods#bindargsschemas) that expects an array of schemas for bind arguments.
+next-cool-action exposes a [`bindArgsSchemas` method](/docs/define-actions/instance-methods#bindargsschemas) that expects an array of schemas for bind arguments.
 
 For example, here we're going to define an `onboardUser` action that has `userId` and `age` as bound arguments and an object with an `username` property as the main argument:
 
@@ -50,7 +50,7 @@ Then, we can use it like this inside a component:
 ```typescript title="src/app/onboard/page.tsx"
 "use client";
 
-import { useAction } from "next-safe-action/hooks";
+import { useAction } from "next-cool-action/hooks";
 import { onboardUser } from "./onboard-action";
 
 export default function OnboardPage() {

@@ -6,12 +6,12 @@ import type { HookCallbacks, HookSafeStateActionFn, UseStateActionHookReturn } f
 import type { InferInputOrDefault, StandardSchemaV1 } from "./standard-schema";
 
 /**
- * Use the stateful action from a Client Component via hook. Used for actions defined with [`stateAction`](https://next-safe-action.dev/docs/define-actions/instance-methods#action--stateaction).
+ * Use the stateful action from a Client Component via hook. Used for actions defined with [`stateAction`](https://next-cool-action.dev/docs/define-actions/instance-methods#action--stateaction).
  * @param safeActionFn The action function
  * @param utils Optional `initResult`, `permalink` and callbacks
  * @deprecated Directly use `useActionState` hook from `react` instead.
  *
- * {@link https://next-safe-action.dev/docs/execute-actions/hooks/usestateaction See docs for more information}
+ * {@link https://next-cool-action.dev/docs/execute-actions/hooks/usestateaction See docs for more information}
  */
 export const useStateAction = <ServerError, S extends StandardSchemaV1 | undefined, CVE, Data>(
 	safeActionFn: HookSafeStateActionFn<ServerError, S, CVE, Data>,

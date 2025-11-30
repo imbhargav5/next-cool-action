@@ -1,6 +1,6 @@
 {
-  "name": "next-safe-action",
-  "version": "0.0.0-development",
+  "name": "next-cool-action",
+  "version": "1.0.0",
   "private": false,
   "description": "Type safe and validated Server Actions in your Next.js project.",
   "main": "./dist/index.mjs",
@@ -27,16 +27,6 @@
       ]
     }
   },
-  "funding": [
-    {
-      "type": "github",
-      "url": "https://github.com/sponsors/TheEdoRan"
-    },
-    {
-      "type": "paypal",
-      "url": "https://www.paypal.com/donate/?hosted_button_id=ES9JRPSC66XKW"
-    }
-  ],
   "scripts": {
     "lint": "tsc && prettier --write . && eslint .",
     "test": "node --import tsx --test ./src/__tests__/*.test.ts",
@@ -56,7 +46,7 @@
     "next actions",
     "server actions"
   ],
-  "author": "Edoardo Ranghieri",
+  "author": "Bhargav Ponnapalli",
   "license": "MIT",
   "engines": {
     "node": ">=18.17"
@@ -91,6 +81,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/TheEdoRan/next-safe-action.git"
+    "url": "https://github.com/bhargavponnapalli/next-cool-action.git"
   }
 }

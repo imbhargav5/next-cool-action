@@ -35,7 +35,7 @@ export const greetUser = actionClient
 ```tsx title=src/app/greet.tsx
 "use client";
 
-import { useAction } from "next-safe-action/hooks";
+import { useAction } from "next-cool-action/hooks";
 import { greetUser } from "@/app/greet-action";
 
 export default function Greet() {
@@ -82,4 +82,4 @@ As you can see, here we display a greet message after the action is performed, i
 - `hasErrored`: true if the action status is `hasErrored`.
 - `hasNavigated`: true if a `next/navigation` function was called inside the action.
 
-Explore a working example [here](<https://github.com/TheEdoRan/next-safe-action/tree/main/apps/playground/src/app/(examples)/hook>).
+Explore a working example [here](<https://github.com/bhargavponnapalli/next-cool-action/tree/main/apps/playground/src/app/(examples)/hook>).

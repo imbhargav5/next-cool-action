@@ -12,7 +12,7 @@ The `useStateAction()` hook is deprecated since version 8. Directly use the [`us
 
 ### `useStateAction()` documentation
 
-You can access the documentation for the deprecated `useStateAction()` hook in the [v7 docs](https://v7.next-safe-action.dev/docs/execute-actions/hooks/usestateaction).
+You can access the documentation for the deprecated `useStateAction()` hook in the [v7 docs](https://v7.next-cool-action.dev/docs/execute-actions/hooks/usestateaction).
 
 ### From v8 onwards
 

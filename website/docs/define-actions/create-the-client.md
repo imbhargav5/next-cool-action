@@ -8,7 +8,7 @@ description: Learn how to create a safe action client,
 After [installing the library](/docs/getting-started#installation), the first thing you have to do is to create an instance of the safe action client:
 
 ```typescript title="src/lib/safe-action.ts"
-import { createSafeActionClient } from "next-safe-action";
+import { createSafeActionClient } from "next-cool-action";
 
 export const actionClient = createSafeActionClient();
 ```
@@ -19,12 +19,12 @@ In the following section we will go through all the options that can be passed t
 
 ### `handleServerError()?`
 
-This optional function handles errors that occur during action's server execution, middleware included. It's used to customize logging and the shape of the server error returned to the client. You also have access to useful properties via the `utils` object, which is the second argument of the function. If not provided, it defaults to console logging the error message and returning a generic string to the client, for all the errors (`DEFAULT_SERVER_ERROR_MESSAGE`, exported from `next-safe-action`).
+This optional function handles errors that occur during action's server execution, middleware included. It's used to customize logging and the shape of the server error returned to the client. You also have access to useful properties via the `utils` object, which is the second argument of the function. If not provided, it defaults to console logging the error message and returning a generic string to the client, for all the errors (`DEFAULT_SERVER_ERROR_MESSAGE`, exported from `next-cool-action`).
 
 Here's a simple example, changing the default message for every error thrown on the server, while keeping the console logging:
 
 ```typescript title=src/lib/safe-action.ts
-import { createSafeActionClient } from "next-safe-action";
+import { createSafeActionClient } from "next-cool-action";
 
 export const actionClient = createSafeActionClient({
   // Can also be an async function.
@@ -49,7 +49,7 @@ A more useful one would be to customize the message based on the error type. We 
 import {
   createSafeActionClient,
   DEFAULT_SERVER_ERROR_MESSAGE,
-} from "next-safe-action";
+} from "next-cool-action";
 
 class MyCustomError extends Error {}
 
@@ -74,7 +74,7 @@ export const actionClient = createSafeActionClient({
 You can also easily rethrow all occurred server errors, if you prefer that behavior. This way, `serverError` in the [action result object](/docs/define-actions/action-result-object) will always be undefined and the action called from the client will throw the server error:
 
 ```typescript title=src/lib/safe-action.ts
-import { createSafeActionClient } from "next-safe-action";
+import { createSafeActionClient } from "next-cool-action";
 
 class MyCustomError extends Error {}
 
@@ -97,7 +97,7 @@ This optional function is used to define the type of the metadata for safe actio
 Here's an example defining a client with a metadata object containing `actionName` as a string, using a Zod schema:
 
 ```typescript title="src/app/safe-action.ts"
-import { createSafeActionClient } from "next-safe-action";
+import { createSafeActionClient } from "next-cool-action";
 import { z } from "zod";
 
 export const actionClient = createSafeActionClient({
@@ -114,7 +114,7 @@ export const actionClient = createSafeActionClient({
 This optional property is used to specify the default shape of the validation errors. The two possible values are `flattened` and `formatted`. The first one emulates Zod [`flatten()`](https://zod.dev/ERROR_HANDLING?id=flattening-errors) method, the second one emulates Zod [`format()`](https://zod.dev/ERROR_HANDLING?id=formatting-errors) method. You can override the default shape in `schema()` method, more information about that [here](/docs/define-actions/validation-errors#customize-validation-errors-format). If this property is not provided, the default shape is `formatted`, as it also catches errors for nested schema objects.
 
 ```typescript
-import { createSafeActionClient } from "next-safe-action";
+import { createSafeActionClient } from "next-cool-action";
 
 export const actionClient = createSafeActionClient({
   // By default all actions will return validation errors in the `flattened` shape.

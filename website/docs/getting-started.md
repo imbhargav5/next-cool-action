@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-description: Getting started with next-safe-action version 7.
+description: Getting started with next-cool-action version 7.
 ---
 
 # Getting started
@@ -13,12 +13,12 @@ description: Getting started with next-safe-action version 7.
 - A validation library supported by [Standard Schema](https://github.com/standard-schema/standard-schema)
 :::
 
-**next-safe-action** provides a typesafe Server Actions implementation for Next.js App Router applications.
+**next-cool-action** provides a typesafe Server Actions implementation for Next.js App Router applications.
 
 ## Installation
 
 ```bash npm2yarn
-npm i next-safe-action
+npm i next-cool-action
 ```
 
 ## Usage
@@ -28,7 +28,7 @@ npm i next-safe-action
 You can create a new client with the following code:
 
 ```typescript title="src/lib/safe-action.ts"
-import { createSafeActionClient } from "next-safe-action";
+import { createSafeActionClient } from "next-cool-action";
 
 export const actionClient = createSafeActionClient();
 ```
@@ -46,7 +46,7 @@ In this documentation, we'll use the Zod library to define our validation logic,
 "use server"; // don't forget to add this!
 
 import { z } from "zod";
-import { returnValidationErrors } from "next-safe-action";
+import { returnValidationErrors } from "next-cool-action";
 import { actionClient } from "@/lib/safe-action";
 
 // This schema is used to validate input from client.

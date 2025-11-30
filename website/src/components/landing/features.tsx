@@ -4,16 +4,16 @@ const features: { title: string; description: string; icon?: string }[] = [
 	{
 		title: "Pretty simple",
 		description:
-			"No need to overcomplicate things.<br/>next-safe-action API is pretty simple, designed for the best possible DX.",
+			"No need to overcomplicate things.<br/>next-cool-action API is pretty simple, designed for the best possible DX.",
 	},
 	{
 		title: "End-to-end type safe",
-		description: "With next-safe-action you get full type safety between server and client code.",
+		description: "With next-cool-action you get full type safety between server and client code.",
 	},
 	{
 		title: "Input/output validation",
 		description:
-			'next-safe-action supports any validation library supported by Standard Schema. You can use Zod, Valibot, ArkType, and <a href="https://github.com/standard-schema/standard-schema?tab=readme-ov-file#what-schema-libraries-implement-the-spec" target="_blank" rel="noopener noreferrer">many more</a>!',
+			'next-cool-action supports any validation library supported by Standard Schema. You can use Zod, Valibot, ArkType, and <a href="https://github.com/standard-schema/standard-schema?tab=readme-ov-file#what-schema-libraries-implement-the-spec" target="_blank" rel="noopener noreferrer">many more</a>!',
 	},
 	{
 		title: "Powerful middleware system",
@@ -26,7 +26,7 @@ const features: { title: string; description: string; icon?: string }[] = [
 	},
 	{
 		title: "Form Actions support",
-		description: "next-safe-action supports Form Actions out of the box, with stateful and stateless actions.",
+		description: "next-cool-action supports Form Actions out of the box, with stateful and stateless actions.",
 	},
 	{
 		title: "Optimistic updates",
@@ -36,7 +36,7 @@ const features: { title: string; description: string; icon?: string }[] = [
 	{
 		title: "Integration with third party libraries",
 		description:
-			"next-safe-action is designed to be extensible. You can easily integrate it with third party libraries, like react-hook-form.",
+			"next-cool-action is designed to be extensible. You can easily integrate it with third party libraries, like react-hook-form.",
 	},
 ];
 
@@ -46,7 +46,7 @@ export function Features() {
 			<div className="px-5 md:px-10">
 				<div className="mx-auto w-full max-w-6xl">
 					<div className="mb-12 text-center md:mb-16">
-						<h2 className="mb-4 text-2xl font-bold md:text-3xl lg:text-4xl">Why choose next-safe-action?</h2>
+						<h2 className="mb-4 text-2xl font-bold md:text-3xl lg:text-4xl">Why choose next-cool-action?</h2>
 						<p className="mx-auto max-w-2xl text-zinc-600 dark:text-zinc-400">
 							A type-safe approach to handling Server Actions in your Next.js applications
 						</p>

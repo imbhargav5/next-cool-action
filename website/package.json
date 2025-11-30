@@ -1,6 +1,7 @@
 {
 	"name": "website",
-	"version": "0.0.0",
+	"version": "1.0.0",
+	"author": "Bhargav Ponnapalli",
 	"private": true,
 	"scripts": {
 		"docusaurus": "docusaurus",

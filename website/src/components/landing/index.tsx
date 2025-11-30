@@ -2,7 +2,6 @@ import { Features } from "./features";
 import { GettingStarted } from "./getting-started";
 import { Hero } from "./hero";
 import { Playground } from "./playground";
-import { Sponsors } from "./sponsors";
 import { Testimonials } from "./testimonials";
 
 export function Landing() {
@@ -12,7 +11,6 @@ export function Landing() {
 			<Testimonials />
 			<Playground />
 			<Features />
-			<Sponsors />
 			<GettingStarted />
 		</main>
 	);

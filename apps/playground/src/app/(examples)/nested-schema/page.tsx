@@ -2,7 +2,7 @@
 
 import { StyledButton } from "@/app/_components/styled-button";
 import { StyledHeading } from "@/app/_components/styled-heading";
-import { useAction } from "next-safe-action/hooks";
+import { useAction } from "next-cool-action/hooks";
 import { ResultBox } from "../../_components/result-box";
 import { buyProduct } from "./shop-action";
 

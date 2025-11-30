@@ -32,7 +32,7 @@ export function Playground() {
 				<div className="mb-12 text-center">
 					<h2 className="mb-4 text-2xl font-bold md:text-3xl">Try it out</h2>
 					<p className="mx-auto max-w-2xl text-zinc-600 dark:text-zinc-400">
-						See next-safe-action in <em>action</em>
+						See next-cool-action in <em>action</em>
 					</p>
 				</div>
 				{isVisible && (
@@ -40,7 +40,7 @@ export function Playground() {
 						loading="lazy"
 						onError={() => {}}
 						className="mx-auto h-[40rem] w-full rounded-lg"
-						src="https://stackblitz.com/edit/next-safe-action-playground?embed=1&file=src%2Flib%2Fsafe-action.ts&ctl=1"
+						src="https://stackblitz.com/edit/next-cool-action-playground?embed=1&file=src%2Flib%2Fsafe-action.ts&ctl=1"
 					/>
 				)}
 			</div>

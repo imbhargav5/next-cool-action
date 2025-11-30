@@ -74,7 +74,7 @@ export default function Home() {
 ```tsx title=src/app/todos-box.tsx
 "use client";
 
-import { useOptimisticAction } from "next-safe-action/hooks";
+import { useOptimisticAction } from "next-cool-action/hooks";
 import { addTodo, type Todo } from "@/app/addtodo-action";
 
 type Props = {
@@ -138,4 +138,4 @@ export default function TodosBox({ todos }: Props) {
 
 The `executing` status and `isExecuting` shorthand property include the transition state.
 
-Explore a working example [here](<https://github.com/TheEdoRan/next-safe-action/tree/main/apps/playground/src/app/(examples)/optimistic-hook>).
+Explore a working example [here](<https://github.com/bhargavponnapalli/next-cool-action/tree/main/apps/playground/src/app/(examples)/optimistic-hook>).

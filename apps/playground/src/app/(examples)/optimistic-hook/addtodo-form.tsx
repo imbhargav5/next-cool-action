@@ -2,7 +2,7 @@
 
 import { StyledButton } from "@/app/_components/styled-button";
 import { StyledInput } from "@/app/_components/styled-input";
-import { useOptimisticAction } from "next-safe-action/hooks";
+import { useOptimisticAction } from "next-cool-action/hooks";
 import { ResultBox } from "../../_components/result-box";
 import { Todo, addTodo } from "./addtodo-action";
 

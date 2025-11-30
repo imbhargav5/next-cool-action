@@ -16,7 +16,7 @@ export function HeroExample() {
 	const [activeTab, setActiveTab] = useState<Tab>("action");
 
 	const codeContent = {
-		client: `import { createSafeActionClient } from "next-safe-action";
+		client: `import { createSafeActionClient } from "next-cool-action";
 
 // Create the client with default options.
 export const actionClient = createSafeActionClient();`,
@@ -38,7 +38,7 @@ export const greetAction = actionClient
   });`,
 		component: `"use client";
 
-import { useAction } from "next-safe-action/hooks";
+import { useAction } from "next-cool-action/hooks";
 import { greetAction } from "./greet-action";
 
 export function Greet() {

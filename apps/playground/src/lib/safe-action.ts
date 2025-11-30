@@ -1,4 +1,4 @@
-import { DEFAULT_SERVER_ERROR_MESSAGE, createSafeActionClient } from "next-safe-action";
+import { DEFAULT_SERVER_ERROR_MESSAGE, createSafeActionClient } from "next-cool-action";
 import { z } from "zod";
 
 export class ActionError extends Error {}

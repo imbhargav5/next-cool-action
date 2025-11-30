@@ -2,8 +2,8 @@ import GitHubLogo from "./github-logo";
 import "./globals.css";
 
 export const metadata = {
-	title: "Playground for next-safe-action",
-	description: "A basic implementation of next-safe-action library",
+	title: "Playground for next-cool-action",
+	description: "A basic implementation of next-cool-action library",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -12,7 +12,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 			<body className="antialiased bg-slate-50 dark:bg-slate-950 dark:text-slate-50 text-slate-950 flex flex-col min-h-screen items-center pt-24">
 				<a
 					id="github-link"
-					href="https://github.com/TheEdoRan/next-safe-action"
+					href="https://github.com/bhargavponnapalli/next-cool-action"
 					target="_blank"
 					rel="noopener noreferrer"
 					className="mb-8"

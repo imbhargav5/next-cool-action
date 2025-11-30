@@ -2,34 +2,27 @@ import { themes } from "prism-react-renderer";
 
 /** @type {import('@docusaurus/types').Config} */
 export default {
-	title: "next-safe-action",
+	title: "next-cool-action",
 	tagline: "Type safe Server Actions in your Next.js project",
 	favicon: "img/favicon.ico",
 
 	// Set the production url of your site here
-	url: "https://next-safe-action.dev",
+	url: "https://next-cool-action.dev",
 	// Set the /<baseUrl>/ pathname under which your site is served
 	// For GitHub pages deployment, it is often '/<projectName>/'
 	baseUrl: "/",
 
 	// GitHub pages deployment config.
 	// If you aren't using GitHub pages, you don't need these.
-	organizationName: "TheEdoRan", // Usually your GitHub org/user name.
-	projectName: "next-safe-action", // Usually your repo name.
+	organizationName: "bhargavponnapalli", // Usually your GitHub org/user name.
+	projectName: "next-cool-action", // Usually your repo name.
 
 	onBrokenLinks: "throw",
 	onBrokenMarkdownLinks: "warn",
 	onDuplicateRoutes: "throw",
 	onBrokenAnchors: "throw",
 
-	scripts: [
-		{
-			"src": "https://plausible.theedoran.xyz/js/script.js",
-			"async": true,
-			"defer": true,
-			"data-domain": "next-safe-action.dev",
-		},
-	],
+	scripts: [],
 	headTags: [
 		{
 			tagName: "link",
@@ -71,7 +64,7 @@ export default {
 					sidebarPath: require.resolve("./sidebars.js"),
 					// Please change this to your repo.
 					// Remove this to remove the "edit this page" links.
-					editUrl: "https://github.com/TheEdoRan/next-safe-action/tree/main/website",
+					editUrl: "https://github.com/bhargavponnapalli/next-cool-action/tree/main/website",
 					remarkPlugins: [[require("@docusaurus/remark-plugin-npm2yarn"), { sync: true }]],
 				},
 				blog: false,
@@ -101,15 +94,10 @@ export default {
 		},
 		// Replace with your project's social card
 		image: "img/social-card.png",
-		algolia: {
-			appId: "I6TZS9IBSZ",
-			apiKey: "87b638e133658cdec7cc633e6c4986c3",
-			indexName: "next-safe-action",
-		},
 		navbar: {
-			title: "next-safe-action",
+			title: "next-cool-action",
 			logo: {
-				alt: "next-safe-action",
+				alt: "next-cool-action",
 				src: "img/logo-light-mode.svg",
 				srcDark: "img/logo-dark-mode.svg",
 			},
@@ -121,20 +109,12 @@ export default {
 					label: "Docs",
 				},
 				{
-					"href": "https://github.com/TheEdoRan/next-safe-action",
+					"href": "https://github.com/bhargavponnapalli/next-cool-action",
 					"position": "right",
 					"className": "header-github-link",
-					"aria-label": "next-safe-action's GitHub page",
+					"aria-label": "next-cool-action's GitHub page",
 				},
 			],
-		},
-		announcementBar: {
-			id: "next-safe-action-v8",
-			content:
-				"next-safe-action v8 is now available! Check out the <a href='/docs/migrations/v7-to-v8'>migration guide</a> to learn how to update your code for v8.",
-			backgroundColor: "#2B2B2B",
-			textColor: "#fff",
-			isCloseable: true,
 		},
 		prism: {
 			additionalLanguages: ["typescript"],

@@ -19,7 +19,7 @@ import type { InferInputOrDefault, StandardSchemaV1 } from "./standard-schema";
  * @param safeActionFn The action function
  * @param cb Optional base utils and callbacks
  *
- * {@link https://next-safe-action.dev/docs/execute-actions/hooks/useaction See docs for more information}
+ * {@link https://next-cool-action.dev/docs/execute-actions/hooks/useaction See docs for more information}
  */
 export const useAction = <ServerError, S extends StandardSchemaV1 | undefined, CVE, Data>(
 	safeActionFn: HookSafeActionFn<ServerError, S, CVE, Data>,
@@ -146,7 +146,7 @@ export const useAction = <ServerError, S extends StandardSchemaV1 | undefined, C
  * @param safeActionFn The action function
  * @param utils Required `currentData` and `updateFn` and optional callbacks
  *
- * {@link https://next-safe-action.dev/docs/execute-actions/hooks/useoptimisticaction See docs for more information}
+ * {@link https://next-cool-action.dev/docs/execute-actions/hooks/useoptimisticaction See docs for more information}
  */
 export const useOptimisticAction = <ServerError, S extends StandardSchemaV1 | undefined, CVE, Data, State>(
 	safeActionFn: HookSafeActionFn<ServerError, S, CVE, Data>,
