@@ -1,5 +1,11 @@
 # next-cool-action
 
+## 0.0.3
+
+### Patch Changes
+
+- [#7](https://github.com/imbhargav5/next-cool-action/pull/7) [`40e1a5e`](https://github.com/imbhargav5/next-cool-action/commit/40e1a5e4080c498d7fafafd220303fdec9ab6ee8) Thanks [@imbhargav5](https://github.com/imbhargav5)! - update repo
+
 ## 0.0.2
 
 ### Patch Changes
