@@ -18,7 +18,7 @@
 
 ## Documentation
 
-Check out the documentation to learn more about the library.
+Check out the [documentation](https://next-cool-action-docs.vercel.app) to learn more about the library.
 
 ## Installation
 
