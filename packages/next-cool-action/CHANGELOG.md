@@ -1,5 +1,11 @@
 # next-cool-action
 
+## 0.0.4
+
+### Patch Changes
+
+- [`4e36875`](https://github.com/imbhargav5/next-cool-action/commit/4e36875efb964e64182d580dbcc602c3d3c07877) Thanks [@imbhargav5](https://github.com/imbhargav5)! - add adapter
+
 ## 0.0.3
 
 ### Patch Changes
