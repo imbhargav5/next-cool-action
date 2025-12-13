@@ -18,6 +18,13 @@ export {
 
 export type * from "./index.types";
 export type * from "./validation-errors.types";
+export type {
+	StandardSchemaV1,
+	InferInputOrDefault,
+	InferOutputOrDefault,
+	InferInputArray,
+	InferOutputArray,
+} from "./standard-schema";
 
 /**
  * Create a new cool action client.

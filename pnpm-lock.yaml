@@ -108,6 +108,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^5.2.2
         version: 5.2.2(react-hook-form@7.68.0(react@19.2.3))
+      '@next-cool-action/adapter-react-hook-form':
+        specifier: workspace:*
+        version: link:../../packages/adapter-react-hook-form
       lucide-react:
         specifier: ^0.561.0
         version: 0.561.0(react@19.2.3)

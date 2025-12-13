@@ -1,10 +1,9 @@
 "use client";
 
-import type { ValidationErrors } from "next-cool-action";
-import type { HookCoolActionFn } from "next-cool-action/hooks";
+import type { CoolActionResult, StandardSchemaV1, ValidationErrors } from "next-cool-action";
 import { useAction, useOptimisticAction } from "next-cool-action/hooks";
 import * as React from "react";
-import type { Resolver } from "react-hook-form";
+import type { FieldValues, Resolver } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import type {
 	HookProps,
@@ -13,7 +12,6 @@ import type {
 } from "./hooks.types";
 import type { ErrorMapperProps } from "./index";
 import { mapToHookFormErrors } from "./index";
-import type { InferInputOrDefault, InferOutputOrDefault, StandardSchemaV1 } from "./standard-schema";
 
 /**
  * For more advanced use cases where you want full customization of the hooks used, you can
@@ -40,6 +38,14 @@ export function useHookFormActionErrorMapper<S extends StandardSchemaV1 | undefi
 }
 
 /**
+ * Type for the cool action function that can be passed to the hooks.
+ * This accepts both CoolActionFn (with no bind args) and HookCoolActionFn.
+ */
+type CoolActionFnInput<FormValues extends FieldValues, ServerError, CVE, Data> = (
+	input: FormValues
+) => Promise<CoolActionResult<ServerError, StandardSchemaV1<FormValues, FormValues> | undefined, CVE, Data>>;
+
+/**
  * This hook is a wrapper around `useAction` and `useForm` that makes it easier to use cool actions
  * with react-hook-form. It also maps validation errors to `FieldErrors` compatible with react-hook-form.
  *
@@ -48,25 +54,33 @@ export function useHookFormActionErrorMapper<S extends StandardSchemaV1 | undefi
  * @param props Optional props for both `useAction`, `useForm` hooks and error mapper
  * @returns An object containing `action` and `form` controllers, `handleSubmitWithAction`, and `resetFormAndAction`
  */
-export function useHookFormAction<ServerError, S extends StandardSchemaV1 | undefined, CVE, Data, FormContext = any>(
-	coolAction: HookCoolActionFn<ServerError, S, CVE, Data>,
-	hookFormResolver: Resolver<InferInputOrDefault<S, any>, FormContext, InferOutputOrDefault<S, any>>,
-	props?: HookProps<ServerError, S, CVE, Data, FormContext>
-): UseHookFormActionHookReturn<ServerError, S, CVE, Data, FormContext> {
-	const action = useAction(coolAction, props?.actionProps);
+export function useHookFormAction<
+	FormValues extends FieldValues,
+	ServerError = string,
+	CVE = ValidationErrors<StandardSchemaV1<FormValues, FormValues>>,
+	Data = unknown,
+	FormContext = unknown,
+>(
+	coolAction: CoolActionFnInput<FormValues, ServerError, CVE, Data>,
+	hookFormResolver: Resolver<FormValues, FormContext, FormValues>,
+	props?: HookProps<ServerError, CVE, Data, FormValues, FormContext>
+): UseHookFormActionHookReturn<ServerError, CVE, Data, FormValues, FormContext> {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const action = useAction(coolAction as any, props?.actionProps as any);
 
-	const { hookFormValidationErrors } = useHookFormActionErrorMapper<S>(
-		action.result.validationErrors as ValidationErrors<S> | undefined,
+	const { hookFormValidationErrors } = useHookFormActionErrorMapper<StandardSchemaV1<FormValues, FormValues>>(
+		action.result.validationErrors as ValidationErrors<StandardSchemaV1<FormValues, FormValues>> | undefined,
 		props?.errorMapProps
 	);
 
-	const form = useForm<InferInputOrDefault<S, any>, FormContext, InferOutputOrDefault<S, any>>({
+	const form = useForm<FormValues, FormContext, FormValues>({
 		...props?.formProps,
 		resolver: hookFormResolver,
 		errors: hookFormValidationErrors,
 	});
 
-	const handleSubmitWithAction = form.handleSubmit(action.executeAsync);
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const handleSubmitWithAction = form.handleSubmit(action.executeAsync as any);
 
 	const resetFormAndAction = () => {
 		form.reset();
@@ -74,7 +88,7 @@ export function useHookFormAction<ServerError, S extends StandardSchemaV1 | unde
 	};
 
 	return {
-		action,
+		action: action as UseHookFormActionHookReturn<ServerError, CVE, Data, FormValues, FormContext>["action"],
 		form,
 		handleSubmitWithAction,
 		resetFormAndAction,
@@ -92,36 +106,38 @@ export function useHookFormAction<ServerError, S extends StandardSchemaV1 | unde
  * @returns An object containing `action` and `form` controllers, `handleSubmitWithAction`, and `resetFormAndAction`
  */
 export function useHookFormOptimisticAction<
-	ServerError,
-	S extends StandardSchemaV1 | undefined,
-	CVE,
-	Data,
+	FormValues extends FieldValues,
 	State,
-	FormContext = any,
+	ServerError = string,
+	CVE = ValidationErrors<StandardSchemaV1<FormValues, FormValues>>,
+	Data = unknown,
+	FormContext = unknown,
 >(
-	coolAction: HookCoolActionFn<ServerError, S, CVE, Data>,
-	hookFormResolver: Resolver<InferInputOrDefault<S, any>, FormContext, InferOutputOrDefault<S, any>>,
-	props: HookProps<ServerError, S, CVE, Data, FormContext> & {
+	coolAction: CoolActionFnInput<FormValues, ServerError, CVE, Data>,
+	hookFormResolver: Resolver<FormValues, FormContext, FormValues>,
+	props: HookProps<ServerError, CVE, Data, FormValues, FormContext> & {
 		actionProps: {
 			currentState: State;
-			updateFn: (state: State, input: InferInputOrDefault<S, void>) => State;
+			updateFn: (state: State, input: FormValues) => State;
 		};
 	}
-): UseHookFormOptimisticActionHookReturn<ServerError, S, CVE, Data, State, FormContext> {
-	const action = useOptimisticAction(coolAction, props.actionProps);
+): UseHookFormOptimisticActionHookReturn<ServerError, CVE, Data, State, FormValues, FormContext> {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const action = useOptimisticAction(coolAction as any, props.actionProps as any);
 
-	const { hookFormValidationErrors } = useHookFormActionErrorMapper<S>(
-		action.result.validationErrors as ValidationErrors<S> | undefined,
+	const { hookFormValidationErrors } = useHookFormActionErrorMapper<StandardSchemaV1<FormValues, FormValues>>(
+		action.result.validationErrors as ValidationErrors<StandardSchemaV1<FormValues, FormValues>> | undefined,
 		props.errorMapProps
 	);
 
-	const form = useForm<InferInputOrDefault<S, any>, FormContext, InferOutputOrDefault<S, any>>({
+	const form = useForm<FormValues, FormContext, FormValues>({
 		...props?.formProps,
 		resolver: hookFormResolver,
 		errors: hookFormValidationErrors,
 	});
 
-	const handleSubmitWithAction = form.handleSubmit(action.executeAsync);
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const handleSubmitWithAction = form.handleSubmit(action.executeAsync as any);
 
 	const resetFormAndAction = () => {
 		form.reset();
@@ -129,7 +145,7 @@ export function useHookFormOptimisticAction<
 	};
 
 	return {
-		action,
+		action: action as UseHookFormOptimisticActionHookReturn<ServerError, CVE, Data, State, FormValues, FormContext>["action"],
 		form,
 		handleSubmitWithAction,
 		resetFormAndAction,
@@ -137,4 +153,3 @@ export function useHookFormOptimisticAction<
 }
 
 export type * from "./hooks.types";
-

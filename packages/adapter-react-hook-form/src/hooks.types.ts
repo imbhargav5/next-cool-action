@@ -1,17 +1,22 @@
-/* eslint-disable @typescript-eslint/no-unsafe-function-type */
-import type { CoolActionFn } from "next-cool-action";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { StandardSchemaV1 } from "next-cool-action";
 import type { HookCallbacks, UseActionHookReturn, UseOptimisticActionHookReturn } from "next-cool-action/hooks";
-import type { UseFormProps, UseFormReturn } from "react-hook-form";
+import type { FieldValues, UseFormProps, UseFormReturn } from "react-hook-form";
 import type { ErrorMapperProps } from "./index.types";
-import type { InferInputOrDefault, InferOutputOrDefault, StandardSchemaV1 } from "./standard-schema";
 
 /**
  * Optional props for `useHookFormAction` and `useHookFormOptimisticAction`.
  */
-export interface HookProps<ServerError, S extends StandardSchemaV1 | undefined, CVE, Data, FormContext = any> {
+export interface HookProps<
+	ServerError,
+	CVE,
+	Data,
+	FormValues extends FieldValues = FieldValues,
+	FormContext = unknown,
+> {
 	errorMapProps?: ErrorMapperProps;
-	actionProps?: HookCallbacks<ServerError, S, CVE, Data>;
-	formProps?: Omit<UseFormProps<InferInputOrDefault<S, any>, FormContext, InferOutputOrDefault<S, any>>, "resolver">;
+	actionProps?: HookCallbacks<ServerError, any, CVE, Data>;
+	formProps?: Omit<UseFormProps<FormValues, FormContext, FormValues>, "resolver">;
 }
 
 /**
@@ -19,13 +24,13 @@ export interface HookProps<ServerError, S extends StandardSchemaV1 | undefined, 
  */
 export interface UseHookFormActionHookReturn<
 	ServerError,
-	S extends StandardSchemaV1 | undefined,
 	CVE,
 	Data,
-	FormContext = any,
+	FormValues extends FieldValues = FieldValues,
+	FormContext = unknown,
 > {
-	action: UseActionHookReturn<ServerError, S, CVE, Data>;
-	form: UseFormReturn<InferInputOrDefault<S, any>, FormContext, InferOutputOrDefault<S, any>>;
+	action: UseActionHookReturn<ServerError, StandardSchemaV1<FormValues, FormValues>, CVE, Data>;
+	form: UseFormReturn<FormValues, FormContext, FormValues>;
 	handleSubmitWithAction: (e?: React.BaseSyntheticEvent) => Promise<void>;
 	resetFormAndAction: () => void;
 }
@@ -33,30 +38,39 @@ export interface UseHookFormActionHookReturn<
 /**
  * Type of the return object of the `useHookFormOptimisticAction` hook.
  */
-export type UseHookFormOptimisticActionHookReturn<
+export interface UseHookFormOptimisticActionHookReturn<
 	ServerError,
-	S extends StandardSchemaV1 | undefined,
 	CVE,
 	Data,
 	State,
-	FormContext = any,
-> = Omit<UseHookFormActionHookReturn<ServerError, S, CVE, Data, FormContext>, "action"> & {
-	action: UseOptimisticActionHookReturn<ServerError, S, CVE, Data, State>;
-};
+	FormValues extends FieldValues = FieldValues,
+	FormContext = unknown,
+> {
+	action: UseOptimisticActionHookReturn<ServerError, StandardSchemaV1<FormValues, FormValues>, CVE, Data, State>;
+	form: UseFormReturn<FormValues, FormContext, FormValues>;
+	handleSubmitWithAction: (e?: React.BaseSyntheticEvent) => Promise<void>;
+	resetFormAndAction: () => void;
+}
 
 /**
  * Infer the type of the return object of the `useHookFormAction` hook.
  */
-export type InferUseHookFormActionHookReturn<T extends Function, FormContext = any> =
-	T extends CoolActionFn<infer ServerError, infer S extends StandardSchemaV1 | undefined, any, infer CVE, infer Data>
-		? UseHookFormActionHookReturn<ServerError, S, CVE, Data, FormContext>
-		: never;
+export type InferUseHookFormActionHookReturn<
+	FormValues extends FieldValues,
+	ServerError = string,
+	CVE = unknown,
+	Data = unknown,
+	FormContext = unknown,
+> = UseHookFormActionHookReturn<ServerError, CVE, Data, FormValues, FormContext>;
 
 /**
  * Infer the type of the return object of the `useHookFormOptimisticAction` hook.
  */
-export type InferUseHookFormOptimisticActionHookReturn<T extends Function, State, FormContext = any> =
-	T extends CoolActionFn<infer ServerError, infer S extends StandardSchemaV1 | undefined, any, infer CVE, infer Data>
-		? UseHookFormOptimisticActionHookReturn<ServerError, S, CVE, Data, State, FormContext>
-		: never;
-
+export type InferUseHookFormOptimisticActionHookReturn<
+	FormValues extends FieldValues,
+	State,
+	ServerError = string,
+	CVE = unknown,
+	Data = unknown,
+	FormContext = unknown,
+> = UseHookFormOptimisticActionHookReturn<ServerError, CVE, Data, State, FormValues, FormContext>;

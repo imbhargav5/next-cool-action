@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument */
-import type { ValidationErrors } from "next-cool-action";
+import type { InferOutputOrDefault, StandardSchemaV1, ValidationErrors } from "next-cool-action";
 import type { FieldError, FieldErrors } from "react-hook-form";
 import type { ErrorMapperProps } from "./index.types";
-import type { InferOutputOrDefault, StandardSchemaV1 } from "./standard-schema";
 
 /**
  * Maps a validation errors object to an object of `FieldErrors` compatible with react-hook-form.

@@ -1,6 +1,6 @@
 {
 	"name": "@next-cool-action/adapter-react-hook-form",
-	"version": "0.0.1",
+	"version": "0.0.0",
 	"private": false,
 	"description": "This adapter offers a way to seamlessly integrate next-cool-action with react-hook-form.",
 	"main": "./dist/index.mjs",
