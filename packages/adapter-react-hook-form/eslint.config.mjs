@@ -34,9 +34,6 @@ export default tseslint.config(
 			"@typescript-eslint/ban-types": "off",
 			"react-hooks/exhaustive-deps": "warn",
 			"@typescript-eslint/require-await": "off",
-			"@typescript-eslint/no-unsafe-return": "off",
-			"@typescript-eslint/no-unsafe-argument": "off",
-			"@typescript-eslint/no-unsafe-assignment": "off",
 		},
 	}
 );

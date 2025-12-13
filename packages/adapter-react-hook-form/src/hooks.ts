@@ -17,14 +17,14 @@ import { mapToHookFormErrors } from "./index";
  * @param validationErrors Validation errors object from `next-cool-action`
  * @returns Object of `FieldErrors` compatible with react-hook-form
  */
-export function useHookFormActionErrorMapper<S extends StandardSchemaV1 | undefined>(
-	validationErrors: ValidationErrors<S> | undefined,
-	props?: ErrorMapperProps
-) {
+export function useHookFormActionErrorMapper<
+	S extends StandardSchemaV1 | undefined,
+	TFieldValues extends FieldValues = FieldValues,
+>(validationErrors: ValidationErrors<S> | undefined, props?: ErrorMapperProps) {
 	const propsRef = React.useRef(props);
 
 	const hookFormValidationErrors = React.useMemo(
-		() => mapToHookFormErrors<S>(validationErrors, propsRef.current),
+		() => mapToHookFormErrors<S, TFieldValues>(validationErrors, propsRef.current),
 		[validationErrors]
 	);
 
@@ -61,9 +61,15 @@ export function useHookFormAction<
 	hookFormResolver: Resolver<FormValues, FormContext, FormValues>,
 	props?: HookProps<ServerError, CVE, Data, FormValues, FormContext>
 ): UseHookFormActionHookReturn<ServerError, CVE, Data, FormValues, FormContext> {
-	const action = useAction(coolAction as any, props?.actionProps as any);
+	const action = useAction(
+		coolAction as unknown as Parameters<typeof useAction>[0],
+		props?.actionProps as unknown as Parameters<typeof useAction>[1]
+	);
 
-	const { hookFormValidationErrors } = useHookFormActionErrorMapper<StandardSchemaV1<FormValues, FormValues>>(
+	const { hookFormValidationErrors } = useHookFormActionErrorMapper<
+		StandardSchemaV1<FormValues, FormValues>,
+		FormValues
+	>(
 		action.result.validationErrors as ValidationErrors<StandardSchemaV1<FormValues, FormValues>> | undefined,
 		props?.errorMapProps
 	);
@@ -74,7 +80,9 @@ export function useHookFormAction<
 		errors: hookFormValidationErrors,
 	});
 
-	const handleSubmitWithAction = form.handleSubmit(action.executeAsync as any);
+	const handleSubmitWithAction = form.handleSubmit(
+		action.executeAsync as unknown as (data: FormValues) => Promise<void>
+	);
 
 	const resetFormAndAction = () => {
 		form.reset();
@@ -82,7 +90,7 @@ export function useHookFormAction<
 	};
 
 	return {
-		action: action as UseHookFormActionHookReturn<ServerError, CVE, Data, FormValues, FormContext>["action"],
+		action: action as unknown as UseHookFormActionHookReturn<ServerError, CVE, Data, FormValues, FormContext>["action"],
 		form,
 		handleSubmitWithAction,
 		resetFormAndAction,
@@ -116,9 +124,15 @@ export function useHookFormOptimisticAction<
 		};
 	}
 ): UseHookFormOptimisticActionHookReturn<ServerError, CVE, Data, State, FormValues, FormContext> {
-	const action = useOptimisticAction(coolAction as any, props.actionProps as any);
+	const action = useOptimisticAction(
+		coolAction as unknown as Parameters<typeof useOptimisticAction>[0],
+		props.actionProps as unknown as Parameters<typeof useOptimisticAction>[1]
+	);
 
-	const { hookFormValidationErrors } = useHookFormActionErrorMapper<StandardSchemaV1<FormValues, FormValues>>(
+	const { hookFormValidationErrors } = useHookFormActionErrorMapper<
+		StandardSchemaV1<FormValues, FormValues>,
+		FormValues
+	>(
 		action.result.validationErrors as ValidationErrors<StandardSchemaV1<FormValues, FormValues>> | undefined,
 		props.errorMapProps
 	);
@@ -129,7 +143,9 @@ export function useHookFormOptimisticAction<
 		errors: hookFormValidationErrors,
 	});
 
-	const handleSubmitWithAction = form.handleSubmit(action.executeAsync as any);
+	const handleSubmitWithAction = form.handleSubmit(
+		action.executeAsync as unknown as (data: FormValues) => Promise<void>
+	);
 
 	const resetFormAndAction = () => {
 		form.reset();
@@ -137,7 +153,7 @@ export function useHookFormOptimisticAction<
 	};
 
 	return {
-		action: action as UseHookFormOptimisticActionHookReturn<
+		action: action as unknown as UseHookFormOptimisticActionHookReturn<
 			ServerError,
 			CVE,
 			Data,

@@ -14,7 +14,7 @@ export interface HookProps<
 	FormContext = unknown,
 > {
 	errorMapProps?: ErrorMapperProps;
-	actionProps?: HookCallbacks<ServerError, any, CVE, Data>;
+	actionProps?: HookCallbacks<ServerError, StandardSchemaV1<FormValues, FormValues>, CVE, Data>;
 	formProps?: Omit<UseFormProps<FormValues, FormContext, FormValues>, "resolver">;
 }
 
