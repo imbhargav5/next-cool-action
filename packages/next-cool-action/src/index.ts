@@ -7,13 +7,13 @@ import { flattenValidationErrors, formatValidationErrors } from "./validation-er
 export { createMiddleware } from "./middleware";
 export { DEFAULT_SERVER_ERROR_MESSAGE } from "./utils";
 export {
-	ActionBindArgsValidationError,
-	ActionMetadataValidationError,
-	ActionOutputDataValidationError,
-	ActionValidationError,
-	flattenValidationErrors,
-	formatValidationErrors,
-	returnValidationErrors,
+    ActionBindArgsValidationError,
+    ActionMetadataValidationError,
+    ActionOutputDataValidationError,
+    ActionValidationError,
+    flattenValidationErrors,
+    formatValidationErrors,
+    returnValidationErrors
 } from "./validation-errors";
 
 export type * from "./index.types";
@@ -41,7 +41,19 @@ export const createSafeActionClient = <
 			return DEFAULT_SERVER_ERROR_MESSAGE as ServerError;
 		});
 
-	return new SafeActionClient({
+	return new SafeActionClient<
+		ServerError,
+		ODVES,
+		MetadataSchema,
+		InferOutputOrDefault<MetadataSchema, undefined>,
+		MetadataSchema extends undefined ? true : false,
+		{}, // Ctx
+		undefined, // ISF
+		undefined, // IS - explicitly undefined at initialization
+		undefined, // OS
+		[], // BAS
+		undefined // CVE
+	>({
 		middlewareFns: [async ({ next }) => next({ ctx: {} })],
 		handleServerError,
 		inputSchemaFn: undefined,
@@ -52,9 +64,9 @@ export const createSafeActionClient = <
 		metadata: undefined as InferOutputOrDefault<MetadataSchema, undefined>,
 		defaultValidationErrorsShape: (createOpts?.defaultValidationErrorsShape ?? "formatted") as ODVES,
 		throwValidationErrors: Boolean(createOpts?.throwValidationErrors),
-		handleValidationErrorsShape: async (ve) =>
+		handleValidationErrorsShape: (async (ve: any) =>
 			createOpts?.defaultValidationErrorsShape === "flattened"
 				? flattenValidationErrors(ve)
-				: formatValidationErrors(ve),
+				: formatValidationErrors(ve)) as never,
 	});
 };

@@ -1,17 +1,17 @@
 import { actionBuilder } from "./action-builder";
 import type {
-	DVES,
-	MiddlewareFn,
-	SafeActionClientArgs,
-	SafeActionUtils,
-	ServerCodeFn,
-	StateServerCodeFn,
+    DVES,
+    MiddlewareFn,
+    SafeActionClientArgs,
+    SafeActionUtils,
+    ServerCodeFn,
+    StateServerCodeFn,
 } from "./index.types";
 import type { InferOutputOrDefault, StandardSchemaV1 } from "./standard-schema";
 import type {
-	FlattenedValidationErrors,
-	HandleValidationErrorsShapeFn,
-	ValidationErrors,
+    FlattenedValidationErrors,
+    HandleValidationErrorsShapeFn,
+    ValidationErrors,
 } from "./validation-errors.types";
 
 export class SafeActionClient<
@@ -22,7 +22,7 @@ export class SafeActionClient<
 	MDProvided extends boolean = MetadataSchema extends undefined ? true : false,
 	Ctx extends object = {},
 	ISF extends (() => Promise<StandardSchemaV1>) | undefined = undefined, // input schema function
-	IS extends StandardSchemaV1 | undefined = ISF extends Function ? Awaited<ReturnType<ISF>> : undefined, // input schema
+	IS extends StandardSchemaV1 | undefined = undefined, // input schema - independent, not derived from ISF
 	OS extends StandardSchemaV1 | undefined = undefined, // output schema
 	const BAS extends readonly StandardSchemaV1[] = [],
 	CVE = undefined,
@@ -41,8 +41,10 @@ export class SafeActionClient<
 	 *
 	 * {@link https://next-cool-action.dev/docs/define-actions/instance-methods#use See docs for more information}
 	 */
-	use<NextCtx extends object>(middlewareFn: MiddlewareFn<ServerError, MD, Ctx, Ctx & NextCtx>) {
-		return new SafeActionClient({
+	use<NextCtx extends object>(
+		middlewareFn: MiddlewareFn<ServerError, MD, Ctx, Ctx & NextCtx>
+	): SafeActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx & NextCtx, ISF, IS, OS, BAS, CVE> {
+		return new SafeActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx & NextCtx, ISF, IS, OS, BAS, CVE>({
 			...this.#args,
 			middlewareFns: [...this.#args.middlewareFns, middlewareFn],
 			ctxType: {} as Ctx & NextCtx,
@@ -55,8 +57,8 @@ export class SafeActionClient<
 	 *
 	 * {@link https://next-cool-action.dev/docs/define-actions/instance-methods#metadata See docs for more information}
 	 */
-	metadata(data: MD) {
-		return new SafeActionClient({
+	metadata(data: MD): SafeActionClient<ServerError, ODVES, MetadataSchema, MD, true, Ctx, ISF, IS, OS, BAS, CVE> {
+		return new SafeActionClient<ServerError, ODVES, MetadataSchema, MD, true, Ctx, ISF, IS, OS, BAS, CVE>({
 			...this.#args,
 			metadata: data,
 			metadataProvided: true,
@@ -74,7 +76,9 @@ export class SafeActionClient<
 		OIS extends StandardSchemaV1 | ((prevSchema: IS) => Promise<StandardSchemaV1>), // override input schema
 		AIS extends StandardSchemaV1 = OIS extends (prevSchema: IS) => Promise<StandardSchemaV1> // actual input schema
 			? Awaited<ReturnType<OIS>>
-			: OIS,
+			: OIS extends StandardSchemaV1
+				? OIS
+				: never,
 		// override custom validation errors shape
 		OCVE = ODVES extends "flattened" ? FlattenedValidationErrors<ValidationErrors<AIS>> : ValidationErrors<AIS>,
 	>(
@@ -82,26 +86,21 @@ export class SafeActionClient<
 		utils?: {
 			handleValidationErrorsShape?: HandleValidationErrorsShapeFn<AIS, BAS, MD, Ctx, OCVE>;
 		}
-	) {
-		return new SafeActionClient({
+	): SafeActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, () => Promise<AIS>, AIS, OS, BAS, OCVE> {
+		const newInputSchemaFn = ((inputSchema as unknown as { [Symbol.toStringTag]?: string })[Symbol.toStringTag] === "AsyncFunction"
+			? async () => {
+					const prevSchema = await this.#args.inputSchemaFn?.();
+					return (inputSchema as (prevSchema: IS) => Promise<StandardSchemaV1>)(prevSchema as IS);
+				}
+			: async () => inputSchema) as () => Promise<AIS>;
+
+		return new SafeActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, () => Promise<AIS>, AIS, OS, BAS, OCVE>({
 			...this.#args,
-			// @ts-expect-error
-			inputSchemaFn: (inputSchema[Symbol.toStringTag] === "AsyncFunction"
-				? async () => {
-						const prevSchema = await this.#args.inputSchemaFn?.();
-						// @ts-expect-error
-						return inputSchema(prevSchema as IS) as AIS;
-					}
-				: async () => inputSchema) as ISF,
+			inputSchemaFn: newInputSchemaFn,
 			handleValidationErrorsShape: (utils?.handleValidationErrorsShape ??
 				this.#args.handleValidationErrorsShape) as HandleValidationErrorsShapeFn<AIS, BAS, MD, Ctx, OCVE>,
 		});
 	}
-
-	/**
-	 * @deprecated Alias for `inputSchema` method. Use that instead.
-	 */
-	schema = this.inputSchema;
 
 	/**
 	 * Define the bind args input validation schema for the action.
@@ -109,8 +108,10 @@ export class SafeActionClient<
 	 *
 	 * {@link https://next-cool-action.dev/docs/define-actions/instance-methods#bindargsschemas See docs for more information}
 	 */
-	bindArgsSchemas<const OBAS extends readonly StandardSchemaV1[]>(bindArgsSchemas: OBAS) {
-		return new SafeActionClient({
+	bindArgsSchemas<const OBAS extends readonly StandardSchemaV1[]>(
+		bindArgsSchemas: OBAS
+	): SafeActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, ISF, IS, OS, OBAS, CVE> {
+		return new SafeActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, ISF, IS, OS, OBAS, CVE>({
 			...this.#args,
 			bindArgsSchemas,
 			handleValidationErrorsShape: this.#args.handleValidationErrorsShape as unknown as HandleValidationErrorsShapeFn<
@@ -129,8 +130,10 @@ export class SafeActionClient<
 	 *
 	 * {@link https://next-cool-action.dev/docs/define-actions/create-the-client#outputschema See docs for more information}
 	 */
-	outputSchema<OOS extends StandardSchemaV1>(dataSchema: OOS) {
-		return new SafeActionClient({
+	outputSchema<OOS extends StandardSchemaV1>(
+		dataSchema: OOS
+	): SafeActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, ISF, IS, OOS, BAS, CVE> {
+		return new SafeActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, ISF, IS, OOS, BAS, CVE>({
 			...this.#args,
 			outputSchema: dataSchema,
 		});

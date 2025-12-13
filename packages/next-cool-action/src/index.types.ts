@@ -1,10 +1,10 @@
 import type { SafeActionClient } from "./safe-action-client";
 import type {
-	InferInputArray,
-	InferInputOrDefault,
-	InferOutputArray,
-	InferOutputOrDefault,
-	StandardSchemaV1,
+    InferInputArray,
+    InferInputOrDefault,
+    InferOutputArray,
+    InferOutputOrDefault,
+    StandardSchemaV1,
 } from "./standard-schema";
 import type { MaybePromise, Prettify } from "./utils.types";
 import type { HandleValidationErrorsShapeFn, ValidationErrors } from "./validation-errors.types";
@@ -41,7 +41,7 @@ export type SafeActionClientArgs<
 	MDProvided extends boolean = MetadataSchema extends undefined ? true : false,
 	Ctx extends object = {},
 	ISF extends (() => Promise<StandardSchemaV1>) | undefined = undefined, // input schema function
-	IS extends StandardSchemaV1 | undefined = ISF extends Function ? Awaited<ReturnType<ISF>> : undefined, // input schema
+	IS extends StandardSchemaV1 | undefined = undefined, // input schema - independent, not derived from ISF
 	OS extends StandardSchemaV1 | undefined = undefined, // output schema
 	BAS extends readonly StandardSchemaV1[] = [], // bind args schemas
 	CVE = undefined, // custom validation errors shape

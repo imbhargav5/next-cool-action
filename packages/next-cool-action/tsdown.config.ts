@@ -5,5 +5,8 @@ export default defineConfig({
 	format: ["esm"],
 	clean: true,
 	sourcemap: true,
-	dts: true,
+	dts: {
+		resolve: true,
+	},
+	hash: false,
 });

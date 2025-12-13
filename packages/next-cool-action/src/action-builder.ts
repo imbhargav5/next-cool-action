@@ -1,33 +1,33 @@
 import { deepmerge } from "deepmerge-ts";
-import type {} from "zod";
+import type { } from "zod";
 import type {
-	DVES,
-	MiddlewareResult,
-	SafeActionClientArgs,
-	SafeActionFn,
-	SafeActionResult,
-	SafeActionUtils,
-	SafeStateActionFn,
-	ServerCodeFn,
-	StateServerCodeFn,
+    DVES,
+    MiddlewareResult,
+    SafeActionClientArgs,
+    SafeActionFn,
+    SafeActionResult,
+    SafeActionUtils,
+    SafeStateActionFn,
+    ServerCodeFn,
+    StateServerCodeFn,
 } from "./index.types";
 import { FrameworkErrorHandler } from "./next/errors";
 import type {
-	InferInputArray,
-	InferInputOrDefault,
-	InferOutputArray,
-	InferOutputOrDefault,
-	StandardSchemaV1,
+    InferInputArray,
+    InferInputOrDefault,
+    InferOutputArray,
+    InferOutputOrDefault,
+    StandardSchemaV1,
 } from "./standard-schema";
 import { standardParse } from "./standard-schema";
 import { DEFAULT_SERVER_ERROR_MESSAGE, isError, winningBoolean } from "./utils";
 import {
-	ActionBindArgsValidationError,
-	ActionMetadataValidationError,
-	ActionOutputDataValidationError,
-	ActionServerValidationError,
-	ActionValidationError,
-	buildValidationErrors,
+    ActionBindArgsValidationError,
+    ActionMetadataValidationError,
+    ActionOutputDataValidationError,
+    ActionServerValidationError,
+    ActionValidationError,
+    buildValidationErrors,
 } from "./validation-errors";
 import type { ValidationErrors } from "./validation-errors.types";
 
@@ -38,7 +38,7 @@ export function actionBuilder<
 	MD = InferOutputOrDefault<MetadataSchema, undefined>, // metadata type (inferred from metadata schema)
 	Ctx extends object = {},
 	ISF extends (() => Promise<StandardSchemaV1>) | undefined = undefined, // input schema function
-	IS extends StandardSchemaV1 | undefined = ISF extends Function ? Awaited<ReturnType<ISF>> : undefined, // input schema
+	IS extends StandardSchemaV1 | undefined = undefined, // input schema - independent, not derived from ISF
 	OS extends StandardSchemaV1 | undefined = undefined, // output schema
 	const BAS extends readonly StandardSchemaV1[] = [],
 	CVE = undefined,

@@ -310,6 +310,28 @@ outputSchema<OOS extends StandardSchemaV1>(
 }
 ```
 
+#### Change 1.7: Remove Deprecated `schema` Alias (lines 101-104)
+
+The `.schema()` method is a deprecated alias for `.inputSchema()`. Remove it entirely to simplify the API surface.
+
+**Before:**
+```typescript
+/**
+ * @deprecated Alias for `inputSchema` method. Use that instead.
+ */
+schema = this.inputSchema;
+```
+
+**After:**
+```typescript
+// DELETED - Remove entirely
+```
+
+**Rationale:**
+- The alias adds unnecessary API surface
+- Users should use `.inputSchema()` directly
+- Removing it simplifies maintenance and avoids type inference complications with property assignments
+
 ---
 
 ### File 2: `packages/next-cool-action/src/index.types.ts`
@@ -460,6 +482,7 @@ return new SafeActionClient<
 | `safe-action-client.ts` | Lines 44-50 | Add explicit return type to `use()` method |
 | `safe-action-client.ts` | Lines 58-64 | Add explicit return type to `metadata()` method |
 | `safe-action-client.ts` | Lines 73-99 | Add explicit return type to `inputSchema()`, set `IS = AIS` |
+| `safe-action-client.ts` | Lines 101-104 | **Remove deprecated `.schema` alias entirely** |
 | `safe-action-client.ts` | Lines 112-124 | Add explicit return type to `bindArgsSchemas()` method |
 | `safe-action-client.ts` | Lines 132-137 | Add explicit return type to `outputSchema()` method |
 | `index.types.ts` | Line 44 | Remove `IS` derivation from `ISF` |
@@ -587,9 +610,22 @@ The fix works because:
 
 ## Backward Compatibility
 
-This change is **fully backward compatible**:
+This change is **mostly backward compatible** with one intentional breaking change:
 
-- No API changes for consumers
-- No runtime behavior changes
-- Existing code continues to work
+**Non-breaking:**
+- No runtime behavior changes for `.inputSchema()`
+- Existing code using `.inputSchema()` continues to work
 - Type inference improves automatically
+
+**Breaking (intentional):**
+- **Removed `.schema()` method** - This was a deprecated alias for `.inputSchema()`. Users must migrate:
+
+```typescript
+// Before (deprecated)
+ac.schema(z.object({ name: z.string() }))
+
+// After (use inputSchema instead)
+ac.inputSchema(z.object({ name: z.string() }))
+```
+
+This is a simple find-and-replace migration: `.schema(` → `.inputSchema(`
