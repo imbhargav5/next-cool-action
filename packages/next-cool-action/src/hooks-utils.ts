@@ -58,9 +58,7 @@ const hasResultErrors = <ServerError, S extends StandardSchemaV1 | undefined, CV
 	thrownError: Error | null
 ): boolean => {
 	return (
-		thrownError !== null ||
-		typeof result.validationErrors !== "undefined" ||
-		typeof result.serverError !== "undefined"
+		thrownError !== null || typeof result.validationErrors !== "undefined" || typeof result.serverError !== "undefined"
 	);
 };
 

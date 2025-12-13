@@ -20,9 +20,9 @@ export const addTodo = action
 	.inputSchema(schema)
 	.action(async ({ parsedInput }) => {
 		await new Promise((res) => setTimeout(res, 500));
-
-		if (Math.random() > 0.5) {
-			throw new ActionError("Could not add todo right now, please try again later.");
+		const randomValue = Math.random();
+		if (randomValue > 0.5) {
+			throw new ActionError(`Could not add todo right now, please try again later. ${randomValue}`);
 		}
 
 		todos.push(parsedInput);

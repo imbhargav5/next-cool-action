@@ -1,17 +1,17 @@
 import { actionBuilder } from "./action-builder";
 import type {
-    CoolActionClientArgs,
-    CoolActionUtils,
-    DVES,
-    MiddlewareFn,
-    ServerCodeFn,
-    StateServerCodeFn,
+	CoolActionClientArgs,
+	CoolActionUtils,
+	DVES,
+	MiddlewareFn,
+	ServerCodeFn,
+	StateServerCodeFn,
 } from "./index.types";
 import type { InferOutputOrDefault, StandardSchemaV1 } from "./standard-schema";
 import type {
-    FlattenedValidationErrors,
-    HandleValidationErrorsShapeFn,
-    ValidationErrors,
+	FlattenedValidationErrors,
+	HandleValidationErrorsShapeFn,
+	ValidationErrors,
 } from "./validation-errors.types";
 
 export class CoolActionClient<
@@ -44,7 +44,19 @@ export class CoolActionClient<
 	use<NextCtx extends object>(
 		middlewareFn: MiddlewareFn<ServerError, MD, Ctx, Ctx & NextCtx>
 	): CoolActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx & NextCtx, ISF, IS, OS, BAS, CVE> {
-		return new CoolActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx & NextCtx, ISF, IS, OS, BAS, CVE>({
+		return new CoolActionClient<
+			ServerError,
+			ODVES,
+			MetadataSchema,
+			MD,
+			MDProvided,
+			Ctx & NextCtx,
+			ISF,
+			IS,
+			OS,
+			BAS,
+			CVE
+		>({
 			...this.#args,
 			middlewareFns: [...this.#args.middlewareFns, middlewareFn],
 			ctxType: {} as Ctx & NextCtx,
@@ -87,14 +99,28 @@ export class CoolActionClient<
 			handleValidationErrorsShape?: HandleValidationErrorsShapeFn<AIS, BAS, MD, Ctx, OCVE>;
 		}
 	): CoolActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, () => Promise<AIS>, AIS, OS, BAS, OCVE> {
-		const newInputSchemaFn = ((inputSchema as unknown as { [Symbol.toStringTag]?: string })[Symbol.toStringTag] === "AsyncFunction"
-			? async () => {
-					const prevSchema = await this.#args.inputSchemaFn?.();
-					return (inputSchema as (prevSchema: IS) => Promise<StandardSchemaV1>)(prevSchema as IS);
-				}
-			: async () => inputSchema) as () => Promise<AIS>;
+		const newInputSchemaFn = (
+			(inputSchema as unknown as { [Symbol.toStringTag]?: string })[Symbol.toStringTag] === "AsyncFunction"
+				? async () => {
+						const prevSchema = await this.#args.inputSchemaFn?.();
+						return (inputSchema as (prevSchema: IS) => Promise<StandardSchemaV1>)(prevSchema as IS);
+					}
+				: async () => inputSchema
+		) as () => Promise<AIS>;
 
-		return new CoolActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, () => Promise<AIS>, AIS, OS, BAS, OCVE>({
+		return new CoolActionClient<
+			ServerError,
+			ODVES,
+			MetadataSchema,
+			MD,
+			MDProvided,
+			Ctx,
+			() => Promise<AIS>,
+			AIS,
+			OS,
+			BAS,
+			OCVE
+		>({
 			...this.#args,
 			inputSchemaFn: newInputSchemaFn,
 			handleValidationErrorsShape: (utils?.handleValidationErrorsShape ??

@@ -1,10 +1,10 @@
 import type { CoolActionClient } from "./cool-action-client";
 import type {
-    InferInputArray,
-    InferInputOrDefault,
-    InferOutputArray,
-    InferOutputOrDefault,
-    StandardSchemaV1,
+	InferInputArray,
+	InferInputOrDefault,
+	InferOutputArray,
+	InferOutputOrDefault,
+	StandardSchemaV1,
 } from "./standard-schema";
 import type { MaybePromise, Prettify } from "./utils.types";
 import type { HandleValidationErrorsShapeFn, ValidationErrors } from "./validation-errors.types";

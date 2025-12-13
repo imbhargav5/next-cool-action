@@ -11,4 +11,4 @@ catalog:
   eslint-config-next: 16.0.10
   react: ^19.2.3
   react-dom: ^19.2.3
-  eslint: ^8.57.0
+  eslint: ^9.0.0
