@@ -1,6 +1,6 @@
 import * as React from "react";
-import type { HookActionStatus, HookCallbacks, HookSafeActionFn, HookShorthandStatus } from "./hooks.types";
-import type { SafeActionResult } from "./index.types";
+import type { HookActionStatus, HookCallbacks, HookCoolActionFn, HookShorthandStatus } from "./hooks.types";
+import type { CoolActionResult } from "./index.types";
 import { FrameworkErrorHandler } from "./next/errors";
 import type { InferInputOrDefault, StandardSchemaV1 } from "./standard-schema";
 
@@ -17,7 +17,7 @@ export const getActionStatus = <ServerError, S extends StandardSchemaV1 | undefi
 	isTransitioning: boolean;
 	hasNavigated: boolean;
 	hasThrownError: boolean;
-	result: SafeActionResult<ServerError, S, CVE, Data>;
+	result: CoolActionResult<ServerError, S, CVE, Data>;
 }): HookActionStatus => {
 	if (isIdle) {
 		return "idle";
@@ -54,13 +54,11 @@ export const getActionShorthandStatusObject = (status: HookActionStatus): HookSh
  * Check if the result has errors (validation errors, server errors, or thrown errors)
  */
 const hasResultErrors = <ServerError, S extends StandardSchemaV1 | undefined, CVE, Data>(
-	result: SafeActionResult<ServerError, S, CVE, Data>,
+	result: CoolActionResult<ServerError, S, CVE, Data>,
 	thrownError: Error | null
 ): boolean => {
 	return (
-		thrownError !== null ||
-		typeof result.validationErrors !== "undefined" ||
-		typeof result.serverError !== "undefined"
+		thrownError !== null || typeof result.validationErrors !== "undefined" || typeof result.serverError !== "undefined"
 	);
 };
 
@@ -69,14 +67,14 @@ const hasResultErrors = <ServerError, S extends StandardSchemaV1 | undefined, CV
  * Used by both useAction and useOptimisticAction.
  */
 export function useInternalAction<ServerError, S extends StandardSchemaV1 | undefined, CVE, Data>(
-	safeActionFn: HookSafeActionFn<ServerError, S, CVE, Data>,
+	coolActionFn: HookCoolActionFn<ServerError, S, CVE, Data>,
 	cb?: HookCallbacks<ServerError, S, CVE, Data>,
 	options?: {
 		onBeforeExecute?: (input: InferInputOrDefault<S, undefined>) => void;
 	}
 ) {
 	const [isTransitioning, startTransition] = React.useTransition();
-	const [result, setResult] = React.useState<SafeActionResult<ServerError, S, CVE, Data>>({});
+	const [result, setResult] = React.useState<CoolActionResult<ServerError, S, CVE, Data>>({});
 	const [clientInput, setClientInput] = React.useState<InferInputOrDefault<S, void>>();
 	const [isExecuting, setIsExecuting] = React.useState(false);
 	const [navigationError, setNavigationError] = React.useState<Error | null>(null);
@@ -117,7 +115,7 @@ export function useInternalAction<ServerError, S extends StandardSchemaV1 | unde
 				// Call onBeforeExecute (used for optimistic updates)
 				optionsRef.current?.onBeforeExecute?.(input as InferInputOrDefault<S, undefined>);
 
-				safeActionFn(input as InferInputOrDefault<S, undefined>)
+				coolActionFn(input as InferInputOrDefault<S, undefined>)
 					.then((res) => {
 						const safeRes = res ?? {};
 						setResult(safeRes);
@@ -165,12 +163,12 @@ export function useInternalAction<ServerError, S extends StandardSchemaV1 | unde
 					});
 			});
 		},
-		[safeActionFn]
+		[coolActionFn]
 	);
 
 	const executeAsync = React.useCallback(
 		(input: InferInputOrDefault<S, void>) => {
-			const fn = new Promise<Awaited<ReturnType<typeof safeActionFn>>>((resolve, reject) => {
+			const fn = new Promise<Awaited<ReturnType<typeof coolActionFn>>>((resolve, reject) => {
 				// Call onExecute callback immediately
 				cbRef.current?.onExecute?.({ input: input as InferInputOrDefault<S, undefined> });
 
@@ -186,7 +184,7 @@ export function useInternalAction<ServerError, S extends StandardSchemaV1 | unde
 					// Call onBeforeExecute (used for optimistic updates)
 					optionsRef.current?.onBeforeExecute?.(input as InferInputOrDefault<S, undefined>);
 
-					safeActionFn(input as InferInputOrDefault<S, undefined>)
+					coolActionFn(input as InferInputOrDefault<S, undefined>)
 						.then((res) => {
 							const safeRes = res ?? {};
 							setResult(safeRes);
@@ -239,7 +237,7 @@ export function useInternalAction<ServerError, S extends StandardSchemaV1 | unde
 
 			return fn;
 		},
-		[safeActionFn]
+		[coolActionFn]
 	);
 
 	const reset = React.useCallback(() => {

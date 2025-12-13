@@ -3,9 +3,9 @@
 import assert from "node:assert";
 import { test } from "node:test";
 import { z } from "zod";
-import { DEFAULT_SERVER_ERROR_MESSAGE, createSafeActionClient } from "..";
+import { DEFAULT_SERVER_ERROR_MESSAGE, createCoolActionClient } from "..";
 
-const ac = createSafeActionClient({
+const ac = createCoolActionClient({
 	handleServerError: () => DEFAULT_SERVER_ERROR_MESSAGE, // disable server errors logging for these tests
 	defineMetadataSchema() {
 		return z.object({

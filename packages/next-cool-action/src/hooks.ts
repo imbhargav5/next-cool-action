@@ -4,7 +4,7 @@ import * as React from "react";
 import { useInternalAction } from "./hooks-utils";
 import type {
 	HookCallbacks,
-	HookSafeActionFn,
+	HookCoolActionFn,
 	UseActionHookReturn,
 	UseOptimisticActionHookReturn,
 } from "./hooks.types";
@@ -14,27 +14,27 @@ import type { InferInputOrDefault, StandardSchemaV1 } from "./standard-schema";
 
 /**
  * Use the action from a Client Component via hook.
- * @param safeActionFn The action function
+ * @param coolActionFn The action function
  * @param cb Optional base utils and callbacks
  *
  * {@link https://next-cool-action.dev/docs/execute-actions/hooks/useaction See docs for more information}
  */
 export const useAction = <ServerError, S extends StandardSchemaV1 | undefined, CVE, Data>(
-	safeActionFn: HookSafeActionFn<ServerError, S, CVE, Data>,
+	coolActionFn: HookCoolActionFn<ServerError, S, CVE, Data>,
 	cb?: HookCallbacks<ServerError, S, CVE, Data>
 ): UseActionHookReturn<ServerError, S, CVE, Data> => {
-	return useInternalAction(safeActionFn, cb);
+	return useInternalAction(coolActionFn, cb);
 };
 
 /**
  * Use the action from a Client Component via hook, with optimistic data update.
- * @param safeActionFn The action function
+ * @param coolActionFn The action function
  * @param utils Required `currentData` and `updateFn` and optional callbacks
  *
  * {@link https://next-cool-action.dev/docs/execute-actions/hooks/useoptimisticaction See docs for more information}
  */
 export const useOptimisticAction = <ServerError, S extends StandardSchemaV1 | undefined, CVE, Data, State>(
-	safeActionFn: HookSafeActionFn<ServerError, S, CVE, Data>,
+	coolActionFn: HookCoolActionFn<ServerError, S, CVE, Data>,
 	utils: {
 		currentState: State;
 		updateFn: (state: State, input: InferInputOrDefault<S, void>) => State;
@@ -46,7 +46,7 @@ export const useOptimisticAction = <ServerError, S extends StandardSchemaV1 | un
 	);
 
 	const baseHook = useInternalAction(
-		safeActionFn,
+		coolActionFn,
 		{
 			onExecute: utils.onExecute,
 			onSuccess: utils.onSuccess,

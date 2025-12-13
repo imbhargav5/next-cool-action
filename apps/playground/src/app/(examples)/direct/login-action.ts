@@ -1,6 +1,6 @@
 "use server";
 
-import { action } from "@/lib/safe-action";
+import { action } from "@/lib/cool-action";
 import { flattenValidationErrors, returnValidationErrors } from "next-cool-action";
 import { z } from "zod";
 

@@ -1,6 +1,6 @@
 "use server";
 
-import { action } from "@/lib/safe-action";
+import { action } from "@/lib/cool-action";
 import { forbidden, notFound, redirect, unauthorized } from "next/navigation";
 import { z } from "zod";
 

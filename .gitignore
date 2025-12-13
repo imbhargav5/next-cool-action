@@ -27,7 +27,7 @@ yarn-error.log*
 .turbo
 
 # Local test file
-/packages/next-safe-action/src/test.ts
+/packages/next-cool-action/src/test.ts
 
 # Website
 /website/.docusaurus

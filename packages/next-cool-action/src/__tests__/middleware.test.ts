@@ -6,14 +6,14 @@ import { test } from "node:test";
 import { z } from "zod";
 import {
 	createMiddleware,
-	createSafeActionClient,
+	createCoolActionClient,
 	DEFAULT_SERVER_ERROR_MESSAGE,
 	formatValidationErrors,
 	returnValidationErrors,
 } from "..";
 import { FrameworkErrorHandler } from "../next/errors";
 
-const ac = createSafeActionClient({
+const ac = createCoolActionClient({
 	handleServerError(e) {
 		// disable server error logging for these tests
 		return {
@@ -380,7 +380,7 @@ test("framework error is thrown within middleware", async () => {
 
 // Flattened validation errors shape.
 
-const flac = createSafeActionClient({
+const flac = createCoolActionClient({
 	handleServerError: () => DEFAULT_SERVER_ERROR_MESSAGE, // disable server errors logging for these tests
 	defaultValidationErrorsShape: "flattened",
 });

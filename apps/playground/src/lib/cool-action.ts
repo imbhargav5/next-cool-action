@@ -1,9 +1,9 @@
-import { DEFAULT_SERVER_ERROR_MESSAGE, createSafeActionClient } from "next-cool-action";
+import { DEFAULT_SERVER_ERROR_MESSAGE, createCoolActionClient } from "next-cool-action";
 import { z } from "zod";
 
 export class ActionError extends Error {}
 
-export const action = createSafeActionClient({
+export const action = createCoolActionClient({
 	// You can provide a custom handler for server errors, otherwise the lib will use `console.error`
 	// as the default logging mechanism and will return the DEFAULT_SERVER_ERROR_MESSAGE for all server errors.
 	handleServerError: (e) => {

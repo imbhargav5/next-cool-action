@@ -1,13 +1,13 @@
 import { deepmerge } from "deepmerge-ts";
 import type {} from "zod";
 import type {
+	CoolActionClientArgs,
+	CoolActionFn,
+	CoolActionResult,
+	CoolActionUtils,
+	CoolStateActionFn,
 	DVES,
 	MiddlewareResult,
-	SafeActionClientArgs,
-	SafeActionFn,
-	SafeActionResult,
-	SafeActionUtils,
-	SafeStateActionFn,
 	ServerCodeFn,
 	StateServerCodeFn,
 } from "./index.types";
@@ -38,24 +38,24 @@ export function actionBuilder<
 	MD = InferOutputOrDefault<MetadataSchema, undefined>, // metadata type (inferred from metadata schema)
 	Ctx extends object = {},
 	ISF extends (() => Promise<StandardSchemaV1>) | undefined = undefined, // input schema function
-	IS extends StandardSchemaV1 | undefined = ISF extends Function ? Awaited<ReturnType<ISF>> : undefined, // input schema
+	IS extends StandardSchemaV1 | undefined = undefined, // input schema - independent, not derived from ISF
 	OS extends StandardSchemaV1 | undefined = undefined, // output schema
 	const BAS extends readonly StandardSchemaV1[] = [],
 	CVE = undefined,
->(args: SafeActionClientArgs<ServerError, ODVES, MetadataSchema, MD, true, Ctx, ISF, IS, OS, BAS, CVE>) {
+>(args: CoolActionClientArgs<ServerError, ODVES, MetadataSchema, MD, true, Ctx, ISF, IS, OS, BAS, CVE>) {
 	const bindArgsSchemas = args.bindArgsSchemas ?? [];
 
 	function buildAction({ withState }: { withState: false }): {
 		action: <Data extends InferOutputOrDefault<OS, any>>(
 			serverCodeFn: ServerCodeFn<MD, Ctx, IS, BAS, Data>,
-			utils?: SafeActionUtils<ServerError, MD, Ctx, IS, BAS, CVE, Data>
-		) => SafeActionFn<ServerError, IS, BAS, CVE, Data>;
+			utils?: CoolActionUtils<ServerError, MD, Ctx, IS, BAS, CVE, Data>
+		) => CoolActionFn<ServerError, IS, BAS, CVE, Data>;
 	};
 	function buildAction({ withState }: { withState: true }): {
 		action: <Data extends InferOutputOrDefault<OS, any>>(
 			serverCodeFn: StateServerCodeFn<ServerError, MD, Ctx, IS, BAS, CVE, Data>,
-			utils?: SafeActionUtils<ServerError, MD, Ctx, IS, BAS, CVE, Data>
-		) => SafeStateActionFn<ServerError, IS, BAS, CVE, Data>;
+			utils?: CoolActionUtils<ServerError, MD, Ctx, IS, BAS, CVE, Data>
+		) => CoolStateActionFn<ServerError, IS, BAS, CVE, Data>;
 	};
 	function buildAction({ withState }: { withState: boolean }) {
 		return {
@@ -63,12 +63,12 @@ export function actionBuilder<
 				serverCodeFn:
 					| ServerCodeFn<MD, Ctx, IS, BAS, Data>
 					| StateServerCodeFn<ServerError, MD, Ctx, IS, BAS, CVE, Data>,
-				utils?: SafeActionUtils<ServerError, MD, Ctx, IS, BAS, CVE, Data>
+				utils?: CoolActionUtils<ServerError, MD, Ctx, IS, BAS, CVE, Data>
 			) => {
 				return async (...clientInputs: unknown[]) => {
 					let currentCtx: object = {};
 					const middlewareResult: MiddlewareResult<ServerError, object> = { success: false };
-					type PrevResult = SafeActionResult<ServerError, IS, CVE, Data>;
+					type PrevResult = CoolActionResult<ServerError, IS, CVE, Data>;
 					let prevResult: PrevResult = {};
 					const parsedInputDatas: any[] = [];
 					const frameworkErrorHandler = new FrameworkErrorHandler();
@@ -317,7 +317,7 @@ export function actionBuilder<
 						throw frameworkErrorHandler.error;
 					}
 
-					const actionResult: SafeActionResult<ServerError, IS, CVE, Data> = {};
+					const actionResult: CoolActionResult<ServerError, IS, CVE, Data> = {};
 
 					if (typeof middlewareResult.validationErrors !== "undefined") {
 						// `utils.throwValidationErrors` has higher priority since it's set at the action level.

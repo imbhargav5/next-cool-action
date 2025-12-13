@@ -1,6 +1,6 @@
 "use server";
 
-import { action } from "@/lib/safe-action";
+import { action } from "@/lib/cool-action";
 import { zfd } from "zod-form-data";
 
 const schema = zfd.formData({

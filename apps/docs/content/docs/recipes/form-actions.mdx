@@ -13,16 +13,16 @@ For defining actions with `FormData` input, the recommended approach is to use t
 
 ## Stateless form actions
 
-You can define a _stateless_ safe action using the [`action()`](/docs/define-actions/instance-methods#action--stateaction) instance method, and then pass it to the `action` prop of a form using [direct execution](/docs/execute-actions/direct-execution), [`useAction()`](/docs/execute-actions/hooks/useaction) hook or [`useOptimisticAction()`](/docs/execute-actions/hooks/useoptimisticaction) hook.
+You can define a _stateless_ cool action using the [`action()`](/docs/define-actions/instance-methods#action--stateaction) instance method, and then pass it to the `action` prop of a form using [direct execution](/docs/execute-actions/direct-execution), [`useAction()`](/docs/execute-actions/hooks/useaction) hook or [`useOptimisticAction()`](/docs/execute-actions/hooks/useoptimisticaction) hook.
 
-With this method, you can access previous result from the client component, both by awaiting the safe action or by using the `result` prop returned by the hooks. You can't access previous result on the server, though, and this is why this approach is called _stateless_: the server doesn't know the previous result of the action execution.
+With this method, you can access previous result from the client component, both by awaiting the cool action or by using the `result` prop returned by the hooks. You can't access previous result on the server, though, and this is why this approach is called _stateless_: the server doesn't know the previous result of the action execution.
 
 Here's an example using the `useAction()` hook:
 
 ```typescript title="stateless-form-action.ts"
 "use server";
 
-import { actionClient } from "@/lib/safe-action";
+import { actionClient } from "@/lib/cool-action";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 
@@ -67,7 +67,7 @@ You can also find this example in the playground app: [stateless form action](ht
 The library uses React's [`useActionState()`](https://react.dev/reference/react/useActionState) hook to support stateful form actions, which means much of the functionality provided by `useAction()` and `useOptimisticAction()` is unavailable with this approach.
 </Callout>
 
-You can define a _stateful_ safe action using the [`stateAction()`](/docs/define-actions/instance-methods#action--stateaction) instance method, and then use it on the client via the [`useActionState()`](https://react.dev/reference/react/useActionState) hook from React.
+You can define a _stateful_ cool action using the [`stateAction()`](/docs/define-actions/instance-methods#action--stateaction) instance method, and then use it on the client via the [`useActionState()`](https://react.dev/reference/react/useActionState) hook from React.
 
 With this method, you can access previous result both from the client component, by using the `state` object returned by the hook, and on the server, where you define the action. More information about that in the [`stateAction()`](/docs/define-actions/instance-methods#action--stateaction) section.
 
@@ -83,7 +83,7 @@ Here's an example of a stateful action, using the `useActionState()` hook:
 ```typescript title="stateful-form-action.ts"
 "use server";
 
-import { action } from "@/lib/safe-action";
+import { action } from "@/lib/cool-action";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 

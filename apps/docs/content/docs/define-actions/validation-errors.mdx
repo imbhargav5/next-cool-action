@@ -9,8 +9,8 @@ description: Learn how to customize or manually creating validation errors.
 
 next-cool-action, by default, emulates Zod's [`format()`](https://zod.dev/ERROR_HANDLING?id=formatting-errors) method for building both validation and bind args validation errors and return them to the client.
 
-This can be customized both at the safe action client level and at the action level by:
-- using [`defaultValidationErrorsShape`](/docs/define-actions/create-the-client#defaultvalidationerrorsshape) optional property in `createSafeActionClient()`;
+This can be customized both at the cool action client level and at the action level by:
+- using [`defaultValidationErrorsShape`](/docs/define-actions/create-the-client#defaultvalidationerrorsshape) optional property in `createCoolActionClient()`;
 - using `handleValidationErrorsShape()` optional async function in [`inputSchema()`](/docs/define-actions/instance-methods#inputschema) method.
 
 The second way overrides the shape set at the instance level, per action.
@@ -20,7 +20,7 @@ For example, if you want to flatten the validation errors (emulation of Zod's [`
 ```typescript src="src/app/login-action.ts"
 "use server";
 
-import { actionClient } from "@/lib/safe-action";
+import { actionClient } from "@/lib/cool-action";
 import { flattenValidationErrors } from "next-cool-action";
 import { z } from "zod";
 
@@ -81,7 +81,7 @@ flattenedErrors = {
 
 ### `formatValidationErrors()` utility function
 
-Exported `formatValidationErrors()` utility function emulates Zod's [`format()`](https://zod.dev/ERROR_HANDLING?id=formatting-errors) method for building validation errors and return them to the client. You can use it, for instance, if you set the [`defaultValidationErrorsShape`](/docs/define-actions/create-the-client#defaultvalidationerrorsshape) to `flattened` in `createSafeActionClient()` and need the formatted shape for a specific action.
+Exported `formatValidationErrors()` utility function emulates Zod's [`format()`](https://zod.dev/ERROR_HANDLING?id=formatting-errors) method for building validation errors and return them to the client. You can use it, for instance, if you set the [`defaultValidationErrorsShape`](/docs/define-actions/create-the-client#defaultvalidationerrorsshape) to `flattened` in `createCoolActionClient()` and need the formatted shape for a specific action.
 
 ## Create custom validation errors
 
@@ -118,7 +118,7 @@ When registering a new user, we also need to check if the email is already store
 
 ```typescript
 import { returnValidationErrors } from "next-cool-action";
-import { actionClient } from "@/lib/safe-action";
+import { actionClient } from "@/lib/cool-action";
 
 // Here we're using the same schema declared above.
 const signupAction = actionClient
@@ -146,4 +146,4 @@ Note that:
 
 ### `throwValidationErrors`
 
-If you want to throw validation errors instead, you can pass this optional property both to [`createSafeActionClient()`](/docs/define-actions/create-the-client#throwvalidationerrors) and as the second argument of the `action()`/`stateAction()` method, in the [action utils object](/docs/define-actions/action-utils#throw-errors-when-they-occur).
+If you want to throw validation errors instead, you can pass this optional property both to [`createCoolActionClient()`](/docs/define-actions/create-the-client#throwvalidationerrors) and as the second argument of the `action()`/`stateAction()` method, in the [action utils object](/docs/define-actions/action-utils#throw-errors-when-they-occur).

@@ -1,4 +1,4 @@
-import type { SafeActionClient } from "./safe-action-client";
+import type { CoolActionClient } from "./cool-action-client";
 import type {
 	InferInputArray,
 	InferInputOrDefault,
@@ -10,7 +10,7 @@ import type { MaybePromise, Prettify } from "./utils.types";
 import type { HandleValidationErrorsShapeFn, ValidationErrors } from "./validation-errors.types";
 
 /**
- * Type of the default validation errors shape passed to `createSafeActionClient` via `defaultValidationErrorsShape`
+ * Type of the default validation errors shape passed to `createCoolActionClient` via `defaultValidationErrorsShape`
  * property.
  */
 export type DVES = "formatted" | "flattened";
@@ -31,9 +31,9 @@ export type HandleServerErrorFn<
 > = (error: Error, utils: ServerErrorFunctionUtils<MetadataSchema>) => MaybePromise<ServerError>;
 
 /**
- * Type of the arguments passed to the `SafeActionClient` constructor.
+ * Type of the arguments passed to the `CoolActionClient` constructor.
  */
-export type SafeActionClientArgs<
+export type CoolActionClientArgs<
 	ServerError,
 	ODVES extends DVES | undefined, // override default validation errors shape
 	MetadataSchema extends StandardSchemaV1 | undefined = undefined,
@@ -41,7 +41,7 @@ export type SafeActionClientArgs<
 	MDProvided extends boolean = MetadataSchema extends undefined ? true : false,
 	Ctx extends object = {},
 	ISF extends (() => Promise<StandardSchemaV1>) | undefined = undefined, // input schema function
-	IS extends StandardSchemaV1 | undefined = ISF extends Function ? Awaited<ReturnType<ISF>> : undefined, // input schema
+	IS extends StandardSchemaV1 | undefined = undefined, // input schema - independent, not derived from ISF
 	OS extends StandardSchemaV1 | undefined = undefined, // output schema
 	BAS extends readonly StandardSchemaV1[] = [], // bind args schemas
 	CVE = undefined, // custom validation errors shape
@@ -61,7 +61,7 @@ export type SafeActionClientArgs<
 };
 
 /**
- * Type of options when creating a new safe action client.
+ * Type of options when creating a new cool action client.
  */
 export type CreateClientOpts<
 	ODVES extends DVES | undefined = undefined,
@@ -75,9 +75,9 @@ export type CreateClientOpts<
 };
 
 /**
- * Type of the result of a safe action.
+ * Type of the result of a cool action.
  */
-export type SafeActionResult<
+export type CoolActionResult<
 	ServerError,
 	S extends StandardSchemaV1 | undefined,
 	CVE = ValidationErrors<S>,
@@ -93,7 +93,7 @@ export type SafeActionResult<
 /**
  * Type of the function called from components with type safe input data.
  */
-export type SafeActionFn<
+export type CoolActionFn<
 	ServerError,
 	S extends StandardSchemaV1 | undefined,
 	BAS extends readonly StandardSchemaV1[],
@@ -101,12 +101,12 @@ export type SafeActionFn<
 	Data,
 > = (
 	...clientInputs: [...bindArgsInputs: InferInputArray<BAS>, input: InferInputOrDefault<S, void>]
-) => Promise<SafeActionResult<ServerError, S, CVE, Data>>;
+) => Promise<CoolActionResult<ServerError, S, CVE, Data>>;
 
 /**
  * Type of the stateful function called from components with type safe input data.
  */
-export type SafeStateActionFn<
+export type CoolStateActionFn<
 	ServerError,
 	S extends StandardSchemaV1 | undefined,
 	BAS extends readonly StandardSchemaV1[],
@@ -115,16 +115,16 @@ export type SafeStateActionFn<
 > = (
 	...clientInputs: [
 		...bindArgsInputs: InferInputArray<BAS>,
-		prevResult: Prettify<SafeActionResult<ServerError, S, CVE, Data>>,
+		prevResult: Prettify<CoolActionResult<ServerError, S, CVE, Data>>,
 		input: InferInputOrDefault<S, void>,
 	]
-) => Promise<SafeActionResult<ServerError, S, CVE, Data>>;
+) => Promise<CoolActionResult<ServerError, S, CVE, Data>>;
 
 /**
- * Type of the result of a middleware function. It extends the result of a safe action with
+ * Type of the result of a middleware function. It extends the result of a cool action with
  * information about the action execution.
  */
-export type MiddlewareResult<ServerError, NextCtx extends object> = SafeActionResult<
+export type MiddlewareResult<ServerError, NextCtx extends object> = CoolActionResult<
 	ServerError,
 	any,
 	any,
@@ -139,7 +139,7 @@ export type MiddlewareResult<ServerError, NextCtx extends object> = SafeActionRe
 };
 
 /**
- * Type of the middleware function passed to a safe action client.
+ * Type of the middleware function passed to a cool action client.
  */
 export type MiddlewareFn<ServerError, MD, Ctx extends object, NextCtx extends object> = {
 	(opts: {
@@ -154,7 +154,7 @@ export type MiddlewareFn<ServerError, MD, Ctx extends object, NextCtx extends ob
 };
 
 /**
- * Type of the function that executes server code when defining a new safe action.
+ * Type of the function that executes server code when defining a new cool action.
  */
 export type ServerCodeFn<
 	MD,
@@ -172,7 +172,7 @@ export type ServerCodeFn<
 }) => Promise<Data>;
 
 /**
- * Type of the function that executes server code when defining a new stateful safe action.
+ * Type of the function that executes server code when defining a new stateful cool action.
  */
 export type StateServerCodeFn<
 	ServerError,
@@ -191,7 +191,7 @@ export type StateServerCodeFn<
 		ctx: Prettify<Ctx>;
 		metadata: MD;
 	},
-	utils: { prevResult: Prettify<SafeActionResult<ServerError, S, CVE, Data>> }
+	utils: { prevResult: Prettify<CoolActionResult<ServerError, S, CVE, Data>> }
 ) => Promise<Data>;
 
 /**
@@ -202,7 +202,7 @@ export type NavigationKind = "redirect" | "notFound" | "forbidden" | "unauthoriz
 /**
  * Type of action execution utils. It includes action callbacks and other utils.
  */
-export type SafeActionUtils<
+export type CoolActionUtils<
 	ServerError,
 	MD,
 	Ctx extends object,
@@ -230,14 +230,14 @@ export type SafeActionUtils<
 		navigationKind: NavigationKind;
 	}) => Promise<unknown>;
 	onError?: (args: {
-		error: Prettify<Omit<SafeActionResult<ServerError, S, CVE, Data>, "data">>;
+		error: Prettify<Omit<CoolActionResult<ServerError, S, CVE, Data>, "data">>;
 		metadata: MD;
 		ctx?: Prettify<Ctx>;
 		clientInput: InferInputOrDefault<S, undefined>;
 		bindArgsClientInputs: InferInputArray<BAS>;
 	}) => Promise<unknown>;
 	onSettled?: (args: {
-		result: Prettify<SafeActionResult<ServerError, S, CVE, Data>>;
+		result: Prettify<CoolActionResult<ServerError, S, CVE, Data>>;
 		metadata: MD;
 		ctx?: Prettify<Ctx>;
 		clientInput: InferInputOrDefault<S, undefined>;
@@ -247,17 +247,17 @@ export type SafeActionUtils<
 };
 
 /**
- * Infer input types of a safe action.
+ * Infer input types of a cool action.
  */
-export type InferSafeActionFnInput<T extends Function> = T extends
-	| SafeActionFn<
+export type InferCoolActionFnInput<T extends Function> = T extends
+	| CoolActionFn<
 			any,
 			infer S extends StandardSchemaV1 | undefined,
 			infer BAS extends readonly StandardSchemaV1[],
 			any,
 			any
 	  >
-	| SafeStateActionFn<
+	| CoolStateActionFn<
 			any,
 			infer S extends StandardSchemaV1 | undefined,
 			infer BAS extends readonly StandardSchemaV1[],
@@ -280,12 +280,12 @@ export type InferSafeActionFnInput<T extends Function> = T extends
 	: never;
 
 /**
- * Infer the result type of a safe action.
+ * Infer the result type of a cool action.
  */
-export type InferSafeActionFnResult<T extends Function> = T extends
-	| SafeActionFn<infer ServerError, infer S extends StandardSchemaV1 | undefined, any, infer CVE, infer Data>
-	| SafeStateActionFn<infer ServerError, infer S extends StandardSchemaV1 | undefined, any, infer CVE, infer Data>
-	? SafeActionResult<ServerError, S, CVE, Data>
+export type InferCoolActionFnResult<T extends Function> = T extends
+	| CoolActionFn<infer ServerError, infer S extends StandardSchemaV1 | undefined, any, infer CVE, infer Data>
+	| CoolStateActionFn<infer ServerError, infer S extends StandardSchemaV1 | undefined, any, infer CVE, infer Data>
+	? CoolActionResult<ServerError, S, CVE, Data>
 	: never;
 
 /**
@@ -295,35 +295,35 @@ export type InferMiddlewareFnNextCtx<T> =
 	T extends MiddlewareFn<any, any, any, infer NextCtx extends object> ? NextCtx : never;
 
 /**
- * Infer the context type of a safe action client or middleware function.
+ * Infer the context type of a cool action client or middleware function.
  */
 export type InferCtx<T> = T extends
-	| SafeActionClient<any, any, any, any, false, infer Ctx extends object, any, any, any, any, any>
+	| CoolActionClient<any, any, any, any, false, infer Ctx extends object, any, any, any, any, any>
 	| MiddlewareFn<any, any, infer Ctx extends object, any>
 	? Ctx
 	: never;
 
 /**
- * Infer the metadata type of a safe action client or middleware function.
+ * Infer the metadata type of a cool action client or middleware function.
  */
 export type InferMetadata<T> = T extends
-	| SafeActionClient<any, any, any, infer MD, false, any, any, any, any, any, any>
+	| CoolActionClient<any, any, any, infer MD, false, any, any, any, any, any, any>
 	| MiddlewareFn<any, infer MD, any, any>
 	? MD
 	: never;
 
 /**
- * Infer the server error type from a safe action client or a middleware function or a safe action function.
+ * Infer the server error type from a cool action client or a middleware function or a cool action function.
  */
 export type InferServerError<T> = T extends
-	| SafeActionClient<infer ServerError, any, any, any, any, any, any, any, any, any, any>
+	| CoolActionClient<infer ServerError, any, any, any, any, any, any, any, any, any, any>
 	| MiddlewareFn<infer ServerError, any, any, any>
-	| SafeActionFn<infer ServerError, any, any, any, any>
-	| SafeStateActionFn<infer ServerError, any, any, any, any>
+	| CoolActionFn<infer ServerError, any, any, any, any>
+	| CoolStateActionFn<infer ServerError, any, any, any, any>
 	? ServerError
 	: never;
 
 /**
- * Type of the core safe action client.
+ * Type of the core cool action client.
  */
-export { SafeActionClient };
+export { CoolActionClient };

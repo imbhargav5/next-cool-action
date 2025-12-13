@@ -61,13 +61,13 @@ As you can see, here we display a greet message after the action is performed, i
 
 ### `useAction()` arguments
 
-- `safeActionFn`: the safe action that will be called via `execute()` or `executeAsync()` functions.
+- `coolActionFn`: the cool action that will be called via `execute()` or `executeAsync()` functions.
 - `utils?`: object with [callbacks](/docs/execute-actions/hooks/hook-callbacks).
 
 ### `useAction()` return object
 
-- `execute()`: an action caller with no return. Input is the same as the safe action you passed to the hook.
-- `executeAsync()`: an action caller that returns a promise with the return value of the safe action. Input is the same as the safe action you passed to the hook.
+- `execute()`: an action caller with no return. Input is the same as the cool action you passed to the hook.
+- `executeAsync()`: an action caller that returns a promise with the return value of the cool action. Input is the same as the cool action you passed to the hook.
 - `input`: the input passed to the `execute()` or `executeAsync()` function.
 - `result`: result of the action after its execution.
 - `reset()`: programmatically reset execution state (`input`, `status` and `result`).
