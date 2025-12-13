@@ -6,10 +6,24 @@
 			"dependsOn": ["^build"],
 			"outputs": [".next/**", "!.next/cache/**", "dist/**", "build/**"]
 		},
+		"@next-cool-action/adapter-react-hook-form#build": {
+			"dependsOn": ["next-cool-action#build"]
+		},		
 		"typecheck": {},
-		"test": {},
-		"lint": {},
-		"dev": {
+		"test": {
+			"dependsOn": ["build", "lint"]
+		},
+		"lint": {
+			"dependsOn": ["build"]
+		},
+		"lint:lib": {
+			"dependsOn": ["next-cool-action#lint", "@next-cool-action/adapter-react-hook-form#lint"]
+		},
+		"typecheck:lib": {},	
+		"build:lib": {
+			"dependsOn": ["next-cool-action#build", "@next-cool-action/adapter-react-hook-form#build"]
+		},
+		"dev": {	
 			"cache": false,
 			"persistent": true
 		}
