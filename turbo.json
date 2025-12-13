@@ -10,6 +10,9 @@
 			"dependsOn": ["next-cool-action#build"]
 		},		
 		"typecheck": {},
+		"test:lib": {
+			"dependsOn": ["next-cool-action#test", "@next-cool-action/adapter-react-hook-form#test"]
+		},
 		"test": {
 			"dependsOn": ["build", "lint"]
 		},
