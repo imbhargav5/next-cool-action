@@ -1,6 +1,6 @@
 {
 	"name": "next-cool-action",
-	"version": "1.0.0",
+	"version": "0.0.1",
 	"private": false,
 	"description": "Type safe and validated Server Actions in your Next.js project.",
 	"main": "./dist/index.mjs",
