@@ -91,6 +91,9 @@
 		"type": "git",
 		"url": "https://github.com/imbhargav5/next-cool-action.git"
 	},
-	"homepage": "https://next-cool-action-docs.vercel.app"
+	"homepage": "https://next-cool-action-docs.vercel.app",
+	"publishConfig": {
+		"access": "public"
+	}
 }
 
