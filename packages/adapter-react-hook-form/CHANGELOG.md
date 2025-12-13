@@ -1,5 +1,12 @@
 # @next-cool-action/adapter-react-hook-form
 
+## 0.0.3
+
+### Patch Changes
+
+- Updated dependencies [[`982fa9a`](https://github.com/imbhargav5/next-cool-action/commit/982fa9a547fc219087c06cf886c8c5061751dff9)]:
+  - next-cool-action@0.0.6
+
 ## 0.0.2
 
 ### Patch Changes
