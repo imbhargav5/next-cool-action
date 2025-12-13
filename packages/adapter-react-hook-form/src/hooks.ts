@@ -5,11 +5,7 @@ import { useAction, useOptimisticAction } from "next-cool-action/hooks";
 import * as React from "react";
 import type { FieldValues, Resolver } from "react-hook-form";
 import { useForm } from "react-hook-form";
-import type {
-	HookProps,
-	UseHookFormActionHookReturn,
-	UseHookFormOptimisticActionHookReturn,
-} from "./hooks.types";
+import type { HookProps, UseHookFormActionHookReturn, UseHookFormOptimisticActionHookReturn } from "./hooks.types";
 import type { ErrorMapperProps } from "./index";
 import { mapToHookFormErrors } from "./index";
 
@@ -65,7 +61,6 @@ export function useHookFormAction<
 	hookFormResolver: Resolver<FormValues, FormContext, FormValues>,
 	props?: HookProps<ServerError, CVE, Data, FormValues, FormContext>
 ): UseHookFormActionHookReturn<ServerError, CVE, Data, FormValues, FormContext> {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const action = useAction(coolAction as any, props?.actionProps as any);
 
 	const { hookFormValidationErrors } = useHookFormActionErrorMapper<StandardSchemaV1<FormValues, FormValues>>(
@@ -79,7 +74,6 @@ export function useHookFormAction<
 		errors: hookFormValidationErrors,
 	});
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const handleSubmitWithAction = form.handleSubmit(action.executeAsync as any);
 
 	const resetFormAndAction = () => {
@@ -122,7 +116,6 @@ export function useHookFormOptimisticAction<
 		};
 	}
 ): UseHookFormOptimisticActionHookReturn<ServerError, CVE, Data, State, FormValues, FormContext> {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const action = useOptimisticAction(coolAction as any, props.actionProps as any);
 
 	const { hookFormValidationErrors } = useHookFormActionErrorMapper<StandardSchemaV1<FormValues, FormValues>>(
@@ -136,7 +129,6 @@ export function useHookFormOptimisticAction<
 		errors: hookFormValidationErrors,
 	});
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const handleSubmitWithAction = form.handleSubmit(action.executeAsync as any);
 
 	const resetFormAndAction = () => {
@@ -145,7 +137,14 @@ export function useHookFormOptimisticAction<
 	};
 
 	return {
-		action: action as UseHookFormOptimisticActionHookReturn<ServerError, CVE, Data, State, FormValues, FormContext>["action"],
+		action: action as UseHookFormOptimisticActionHookReturn<
+			ServerError,
+			CVE,
+			Data,
+			State,
+			FormValues,
+			FormContext
+		>["action"],
 		form,
 		handleSubmitWithAction,
 		resetFormAndAction,

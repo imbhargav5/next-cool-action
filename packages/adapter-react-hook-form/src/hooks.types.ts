@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { StandardSchemaV1 } from "next-cool-action";
 import type { HookCallbacks, UseActionHookReturn, UseOptimisticActionHookReturn } from "next-cool-action/hooks";
 import type { FieldValues, UseFormProps, UseFormReturn } from "react-hook-form";

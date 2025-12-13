@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument */
 import type { InferOutputOrDefault, StandardSchemaV1, ValidationErrors } from "next-cool-action";
 import type { FieldError, FieldErrors } from "react-hook-form";
 import type { ErrorMapperProps } from "./index.types";
@@ -56,4 +55,3 @@ export function mapToHookFormErrors<S extends StandardSchemaV1 | undefined>(
 }
 
 export type * from "./index.types";
-
