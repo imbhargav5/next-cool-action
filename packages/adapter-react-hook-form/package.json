@@ -1,6 +1,6 @@
 {
   "name": "@next-cool-action/adapter-react-hook-form",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": false,
   "description": "This adapter offers a way to seamlessly integrate next-cool-action with react-hook-form.",
   "main": "./dist/index.mjs",
@@ -82,7 +82,7 @@
   "peerDependencies": {
     "@hookform/resolvers": ">= 5.0.0",
     "next": ">= 14.0.0",
-    "next-cool-action": "^0.0.5",
+    "next-cool-action": "^0.0.6",
     "react": ">= 18.2.0",
     "react-dom": ">= 18.2.0",
     "react-hook-form": ">= 7.0.0"
