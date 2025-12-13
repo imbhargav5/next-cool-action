@@ -1,5 +1,11 @@
 # next-cool-action
 
+## 0.0.5
+
+### Patch Changes
+
+- [`6575a60`](https://github.com/imbhargav5/next-cool-action/commit/6575a6044736c28816d048021b67052100d98a08) Thanks [@imbhargav5](https://github.com/imbhargav5)! - update build
+
 ## 0.0.4
 
 ### Patch Changes
