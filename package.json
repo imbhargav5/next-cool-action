@@ -6,9 +6,11 @@
 	"scripts": {
 		"prepare": "is-ci || husky",
 		"pg": "turbo run dev --filter=@apps/playground",
+		"typecheck": "turbo run typecheck",
 		"lint": "turbo run lint",
 		"build": "turbo run build",
 		"test:lib": "turbo run test --filter=next-cool-action",
+		"typecheck:lib": "turbo run typecheck --filter=next-cool-action",
 		"lint:lib": "turbo run lint --filter=next-cool-action",
 		"build:lib": "turbo run build --filter=next-cool-action --force",
 		"deploy:lib": "turbo run deploy --filter=next-cool-action",

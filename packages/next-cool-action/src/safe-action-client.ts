@@ -155,7 +155,7 @@ export class SafeActionClient<
 
 	/**
 	 * Define the stateful action.
-	 * To be used with the [`useStateAction`](https://next-cool-action.dev/docs/execute-actions/hooks/usestateaction) hook.
+	 * To be used with React's `useActionState` hook.
 	 * @param serverCodeFn Code that will be executed on the **server side**
 	 * @param [cb] Optional callbacks that will be called after action execution, on the server.
 	 *
