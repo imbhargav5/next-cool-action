@@ -11,8 +11,7 @@
   ],
   "exports": {
     ".": "./dist/index.mjs",
-    "./hooks": "./dist/hooks.mjs",
-    "./stateful-hooks": "./dist/stateful-hooks.mjs"
+    "./hooks": "./dist/hooks.mjs"
   },
   "typesVersions": {
     "*": {
@@ -21,17 +20,14 @@
       ],
       "hooks": [
         "./dist/hooks.d.mts"
-      ],
-      "stateful-hooks": [
-        "./dist/stateful-hooks.d.mts"
       ]
     }
   },
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "lint": "tsc && prettier --write . && eslint .",
     "test": "node --import tsx --test ./src/__tests__/*.test.ts",
-    "build": "tsdown",
-    "deploy": "semantic-release"
+    "build": "tsdown"
   },
   "keywords": [
     "next",
@@ -66,7 +62,6 @@
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "semantic-release": "^23",
     "tsdown": "^0.14.1",
     "tsx": "^4.19.2",
     "typescript": "catalog:",

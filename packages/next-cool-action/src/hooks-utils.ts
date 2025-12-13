@@ -1,5 +1,5 @@
 import * as React from "react";
-import type { HookActionStatus, HookCallbacks, HookShorthandStatus } from "./hooks.types";
+import type { HookActionStatus, HookCallbacks, HookSafeActionFn, HookShorthandStatus } from "./hooks.types";
 import type { SafeActionResult } from "./index.types";
 import { FrameworkErrorHandler } from "./next/errors";
 import type { InferInputOrDefault, StandardSchemaV1 } from "./standard-schema";
@@ -51,92 +51,212 @@ export const getActionShorthandStatusObject = (status: HookActionStatus): HookSh
 };
 
 /**
- * Converts a callback to a ref to avoid triggering re-renders when passed as a
- * prop or avoid re-executing effects when passed as a dependency
+ * Check if the result has errors (validation errors, server errors, or thrown errors)
  */
-function useCallbackRef<T extends (arg: any) => any>(callback: T | undefined): T {
-	const callbackRef = React.useRef(callback);
-	React.useEffect(() => {
-		callbackRef.current = callback;
-	});
-	return React.useMemo(() => ((arg) => callbackRef.current?.(arg) as T) as T, []);
-}
-
-export const useActionCallbacks = <ServerError, S extends StandardSchemaV1 | undefined, CVE, Data>({
-	result,
-	input,
-	status,
-	cb,
-	navigationError,
-	thrownError,
-}: {
-	result: SafeActionResult<ServerError, S, CVE, Data>;
-	input: InferInputOrDefault<S, undefined>;
-	status: HookActionStatus;
-	cb?: HookCallbacks<ServerError, S, CVE, Data>;
-	navigationError: Error | null;
-	thrownError: Error | null;
-}) => {
-	const onExecute = useCallbackRef(cb?.onExecute);
-	const onSuccess = useCallbackRef(cb?.onSuccess);
-	const onError = useCallbackRef(cb?.onError);
-	const onSettled = useCallbackRef(cb?.onSettled);
-	const onNavigation = useCallbackRef(cb?.onNavigation);
-
-	// Execute the callback when the action status changes.
-	React.useLayoutEffect(() => {
-		const executeCallbacks = async () => {
-			switch (status) {
-				case "executing":
-					await Promise.resolve(onExecute?.({ input })).then(() => {});
-					break;
-				case "transitioning":
-					break;
-				case "hasSucceeded":
-					if (navigationError || thrownError) {
-						break;
-					}
-
-					await Promise.all([
-						Promise.resolve(onSuccess?.({ data: result.data!, input })),
-						Promise.resolve(onSettled?.({ result, input })),
-					]);
-					break;
-				case "hasErrored":
-					await Promise.all([
-						Promise.resolve(
-							onError?.({
-								error: { ...result, ...(thrownError ? { thrownError } : {}) },
-								input,
-							})
-						),
-						Promise.resolve(onSettled?.({ result, input })),
-					]);
-					break;
-			}
-
-			// Navigation flow.
-			// If the user redirected to a different page, the `hasNavigated` status never gets set.
-			// In all the other cases, the `hasNavigated` status is set.
-			if (!navigationError) return;
-			const navigationKind = FrameworkErrorHandler.getNavigationKind(navigationError);
-
-			if (navigationKind === "redirect" || status === "hasNavigated") {
-				const navigationKind = FrameworkErrorHandler.getNavigationKind(navigationError);
-				await Promise.all([
-					Promise.resolve(
-						onNavigation?.({
-							input,
-							navigationKind,
-						})
-					),
-					Promise.resolve(onSettled?.({ result, input, navigationKind })),
-				]);
-			}
-
-			throw navigationError;
-		};
-
-		executeCallbacks().catch(console.error);
-	}, [input, status, result, navigationError, thrownError, onExecute, onSuccess, onSettled, onError, onNavigation]);
+const hasResultErrors = <ServerError, S extends StandardSchemaV1 | undefined, CVE, Data>(
+	result: SafeActionResult<ServerError, S, CVE, Data>,
+	thrownError: Error | null
+): boolean => {
+	return (
+		thrownError !== null ||
+		typeof result.validationErrors !== "undefined" ||
+		typeof result.serverError !== "undefined"
+	);
 };
+
+/**
+ * Internal base hook that handles the core action execution logic.
+ * Used by both useAction and useOptimisticAction.
+ */
+export function useInternalAction<ServerError, S extends StandardSchemaV1 | undefined, CVE, Data>(
+	safeActionFn: HookSafeActionFn<ServerError, S, CVE, Data>,
+	cb?: HookCallbacks<ServerError, S, CVE, Data>,
+	options?: {
+		onBeforeExecute?: (input: InferInputOrDefault<S, undefined>) => void;
+	}
+) {
+	const [isTransitioning, startTransition] = React.useTransition();
+	const [result, setResult] = React.useState<SafeActionResult<ServerError, S, CVE, Data>>({});
+	const [clientInput, setClientInput] = React.useState<InferInputOrDefault<S, void>>();
+	const [isExecuting, setIsExecuting] = React.useState(false);
+	const [navigationError, setNavigationError] = React.useState<Error | null>(null);
+	const [thrownError, setThrownError] = React.useState<Error | null>(null);
+	const [isIdle, setIsIdle] = React.useState(true);
+
+	// Store callbacks in ref for stability (avoid recreating execute when callbacks change)
+	const cbRef = React.useRef(cb);
+	cbRef.current = cb;
+
+	// Store options in ref for stability
+	const optionsRef = React.useRef(options);
+	optionsRef.current = options;
+
+	const status = getActionStatus<ServerError, S, CVE, Data>({
+		isExecuting,
+		isTransitioning,
+		result,
+		isIdle,
+		hasNavigated: navigationError !== null,
+		hasThrownError: thrownError !== null,
+	});
+
+	const execute = React.useCallback(
+		(input: InferInputOrDefault<S, void>) => {
+			// Call onExecute callback immediately
+			cbRef.current?.onExecute?.({ input: input as InferInputOrDefault<S, undefined> });
+
+			setTimeout(() => {
+				setIsIdle(false);
+				setNavigationError(null);
+				setThrownError(null);
+				setClientInput(input);
+				setIsExecuting(true);
+			}, 0);
+
+			startTransition(() => {
+				// Call onBeforeExecute (used for optimistic updates)
+				optionsRef.current?.onBeforeExecute?.(input as InferInputOrDefault<S, undefined>);
+
+				safeActionFn(input as InferInputOrDefault<S, undefined>)
+					.then((res) => {
+						const safeRes = res ?? {};
+						setResult(safeRes);
+
+						// Call success/error callbacks directly
+						if (!hasResultErrors(safeRes, null)) {
+							cbRef.current?.onSuccess?.({ data: safeRes.data!, input: input as InferInputOrDefault<S, undefined> });
+							cbRef.current?.onSettled?.({ result: safeRes, input: input as InferInputOrDefault<S, undefined> });
+						} else {
+							cbRef.current?.onError?.({
+								error: safeRes,
+								input: input as InferInputOrDefault<S, undefined>,
+							});
+							cbRef.current?.onSettled?.({ result: safeRes, input: input as InferInputOrDefault<S, undefined> });
+						}
+					})
+					.catch((e) => {
+						setResult({});
+
+						if (FrameworkErrorHandler.isNavigationError(e)) {
+							setNavigationError(e);
+							const navigationKind = FrameworkErrorHandler.getNavigationKind(e);
+							cbRef.current?.onNavigation?.({
+								input: input as InferInputOrDefault<S, undefined>,
+								navigationKind,
+							});
+							cbRef.current?.onSettled?.({
+								result: {},
+								input: input as InferInputOrDefault<S, undefined>,
+								navigationKind,
+							});
+							return;
+						}
+
+						setThrownError(e as Error);
+						cbRef.current?.onError?.({
+							error: { thrownError: e as Error },
+							input: input as InferInputOrDefault<S, undefined>,
+						});
+						cbRef.current?.onSettled?.({ result: {}, input: input as InferInputOrDefault<S, undefined> });
+						throw e;
+					})
+					.finally(() => {
+						setIsExecuting(false);
+					});
+			});
+		},
+		[safeActionFn]
+	);
+
+	const executeAsync = React.useCallback(
+		(input: InferInputOrDefault<S, void>) => {
+			const fn = new Promise<Awaited<ReturnType<typeof safeActionFn>>>((resolve, reject) => {
+				// Call onExecute callback immediately
+				cbRef.current?.onExecute?.({ input: input as InferInputOrDefault<S, undefined> });
+
+				setTimeout(() => {
+					setIsIdle(false);
+					setNavigationError(null);
+					setThrownError(null);
+					setClientInput(input);
+					setIsExecuting(true);
+				}, 0);
+
+				startTransition(() => {
+					// Call onBeforeExecute (used for optimistic updates)
+					optionsRef.current?.onBeforeExecute?.(input as InferInputOrDefault<S, undefined>);
+
+					safeActionFn(input as InferInputOrDefault<S, undefined>)
+						.then((res) => {
+							const safeRes = res ?? {};
+							setResult(safeRes);
+
+							// Call success/error callbacks directly
+							if (!hasResultErrors(safeRes, null)) {
+								cbRef.current?.onSuccess?.({ data: safeRes.data!, input: input as InferInputOrDefault<S, undefined> });
+								cbRef.current?.onSettled?.({ result: safeRes, input: input as InferInputOrDefault<S, undefined> });
+							} else {
+								cbRef.current?.onError?.({
+									error: safeRes,
+									input: input as InferInputOrDefault<S, undefined>,
+								});
+								cbRef.current?.onSettled?.({ result: safeRes, input: input as InferInputOrDefault<S, undefined> });
+							}
+
+							resolve(res);
+						})
+						.catch((e) => {
+							setResult({});
+
+							if (FrameworkErrorHandler.isNavigationError(e)) {
+								setNavigationError(e);
+								const navigationKind = FrameworkErrorHandler.getNavigationKind(e);
+								cbRef.current?.onNavigation?.({
+									input: input as InferInputOrDefault<S, undefined>,
+									navigationKind,
+								});
+								cbRef.current?.onSettled?.({
+									result: {},
+									input: input as InferInputOrDefault<S, undefined>,
+									navigationKind,
+								});
+								return;
+							}
+
+							setThrownError(e as Error);
+							cbRef.current?.onError?.({
+								error: { thrownError: e as Error },
+								input: input as InferInputOrDefault<S, undefined>,
+							});
+							cbRef.current?.onSettled?.({ result: {}, input: input as InferInputOrDefault<S, undefined> });
+							reject(e);
+						})
+						.finally(() => {
+							setIsExecuting(false);
+						});
+				});
+			});
+
+			return fn;
+		},
+		[safeActionFn]
+	);
+
+	const reset = React.useCallback(() => {
+		setIsIdle(true);
+		setNavigationError(null);
+		setThrownError(null);
+		setClientInput(undefined);
+		setResult({});
+	}, []);
+
+	return {
+		execute,
+		executeAsync,
+		input: clientInput as InferInputOrDefault<S, undefined>,
+		result,
+		reset,
+		status,
+		...getActionShorthandStatusObject(status),
+	};
+}

@@ -6,13 +6,20 @@
 	"scripts": {
 		"prepare": "is-ci || husky",
 		"pg": "turbo run dev --filter=@apps/playground",
+		"docs": "turbo run dev --filter=@apps/docs",
+		"typecheck": "turbo run typecheck",
 		"lint": "turbo run lint",
-		"build": "turbo run build",
+		"build": "turbo run build --filter=!@apps/playground",
 		"test:lib": "turbo run test --filter=next-cool-action",
+		"typecheck:lib": "turbo run typecheck --filter=next-cool-action",
 		"lint:lib": "turbo run lint --filter=next-cool-action",
 		"build:lib": "turbo run build --filter=next-cool-action --force",
-		"deploy:lib": "turbo run deploy --filter=next-cool-action",
-		"build:pg": "turbo run build --filter=@apps/playground --force"
+		"build:pg": "turbo run build --filter=@apps/playground --force",
+		"build:docs": "turbo run build --filter=@apps/docs --force",
+		"changeset": "changeset",
+		"version-packages": "changeset version",
+		"release": "changeset publish",
+		"version": "changeset version && node ./scripts/bump-peer-dep-ranges.js"
 	},
 	"author": "Bhargav Ponnapalli",
 	"license": "MIT",
@@ -26,9 +33,11 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/bhargavponnapalli/next-cool-action.git"
+		"url": "https://github.com/imbhargav5/next-cool-action.git"
 	},
 	"dependencies": {
+		"@changesets/changelog-github": "^0.5.1",
+		"@changesets/cli": "^2.28.1",
 		"@commitlint/cli": "^19.7.1",
 		"@commitlint/config-conventional": "^19.7.1",
 		"@manypkg/cli": "^0.23.0",

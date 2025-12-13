@@ -1,9 +1,9 @@
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
-import { type ReactNode } from "react";
 import { ExampleGithubLink } from "../_components/example-github-link";
 
-export default function ExamplesLayout({ children }: { children: ReactNode }) {
+export default async function ExamplesLayout(props: { children: React.ReactNode }) {
+	const children = await props.children;
 	return (
 		<div>
 			<div className="flex space-x-10 items-center justify-center">
