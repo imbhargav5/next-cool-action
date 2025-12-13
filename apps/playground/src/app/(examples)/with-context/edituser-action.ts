@@ -1,6 +1,6 @@
 "use server";
 
-import { authAction } from "@/lib/safe-action";
+import { authAction } from "@/lib/cool-action";
 import { z } from "zod";
 
 const schema = z.object({

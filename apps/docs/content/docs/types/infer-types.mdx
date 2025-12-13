@@ -7,11 +7,11 @@ description: Learn how to infer types with next-cool-action.
 
 next-cool-action, since version 7.6.4, exports utility types for type inference. Here's a guide on how to use them.
 
-Suppose we have declared this safe action client:
+Suppose we have declared this cool action client:
 
-```typescript title="src/lib/safe-action.ts"
+```typescript title="src/lib/cool-action.ts"
 import { z } from "zod";
-import { createSafeActionClient, createMiddleware } from "next-cool-action";
+import { createCoolActionClient, createMiddleware } from "next-cool-action";
 import { getSessionData } from "@/services/auth"
 
 // Here we declare a standalone auth middleware.
@@ -29,8 +29,8 @@ export const authMiddleware = createMiddleware<{
   });
 });
 
-// Here we declare the safe action client.
-export const actionClient = createSafeActionClient({
+// Here we declare the cool action client.
+export const actionClient = createCoolActionClient({
   defineMetadataSchema: () => {
     return z.object({
       actionName: z.string(),
@@ -59,7 +59,7 @@ And then this action function:
 "use server";
 
 import { z } from "zod";
-import { actionClient } from "@/lib/safe-action";
+import { actionClient } from "@/lib/cool-action";
 
 const testActionSchema = z.object({
   username: z.string(),
@@ -82,15 +82,15 @@ We'll use these exported functions in the following examples.
 
 ## `/`
 
-The library exports several utility types from the root path that help you infer types of a safe action client, a middleware function or a safe action function.
+The library exports several utility types from the root path that help you infer types of a cool action client, a middleware function or a cool action function.
 
 Here's the list of utility types exported from `next-cool-action` path:
-- `InferSafeActionFnInput`: infer input types of a safe action function
-- `InferSafeActionFnResult`: infer result type of a safe action function
+- `InferCoolActionFnInput`: infer input types of a cool action function
+- `InferCoolActionFnResult`: infer result type of a cool action function
 - `InferMiddlewareFnNextCtx`: infer the type of context returned by a middleware function using the `next` function
-- `InferCtx`: infer the type of context of a safe action client, or the context passed to a middleware function
-- `InferMetadata`: infer the type of metadata of a safe action client or middleware function
-- `InferServerError`: infer the type of the `serverError` of a safe action function, middleware function or safe action function
+- `InferCtx`: infer the type of context of a cool action client, or the context passed to a middleware function
+- `InferMetadata`: infer the type of metadata of a cool action client or middleware function
+- `InferServerError`: infer the type of the `serverError` of a cool action function, middleware function or cool action function
 
 ### Example
 
@@ -99,15 +99,15 @@ import type {
   InferCtx,
   InferMetadata,
   InferMiddlewareFnNextCtx,
-  InferSafeActionFnInput,
-  InferSafeActionFnResult,
+  InferCoolActionFnInput,
+  InferCoolActionFnResult,
   InferServerError,
 } from "next-cool-action";
-import type { actionClient, authMiddleware } from "@/lib/safe-action";
+import type { actionClient, authMiddleware } from "@/lib/cool-action";
 import type { testAction } from "@/app/test-action";
 
-// Use `InferSafeActionFnInput` to infer the input types of a safe action function.
-type inferredTestActionInput = InferSafeActionFnInput<typeof testAction>;
+// Use `InferCoolActionFnInput` to infer the input types of a cool action function.
+type inferredTestActionInput = InferCoolActionFnInput<typeof testAction>;
 /*
 {
   clientInput: {
@@ -121,8 +121,8 @@ type inferredTestActionInput = InferSafeActionFnInput<typeof testAction>;
 }
 */
 
-// Use `InferSafeActionFnResult` to infer the result type of a safe action function.
-type inferredTestActionResult = InferSafeActionFnResult<typeof testAction>;
+// Use `InferCoolActionFnResult` to infer the result type of a cool action function.
+type inferredTestActionResult = InferCoolActionFnResult<typeof testAction>;
 /*
 {
   data?: {
@@ -149,9 +149,9 @@ type inferredAuthMiddlewareNextCtx = InferMiddlewareFnNextCtx<typeof authMiddlew
 }
 */
 
-// Use `InferCtx` to infer the type of the context of a safe action client, or the context passed to a
-// middleware function. Here's an example with a safe action client:
-type inferredSafeActionClientCtx = InferCtx<typeof actionClient>;
+// Use `InferCtx` to infer the type of the context of a cool action client, or the context passed to a
+// middleware function. Here's an example with a cool action client:
+type inferredCoolActionClientCtx = InferCtx<typeof actionClient>;
 /*
 {
   sessionToken: string;
@@ -161,7 +161,7 @@ type inferredSafeActionClientCtx = InferCtx<typeof actionClient>;
 }
 */
 
-// Use `InferMetadata` to infer the type of the metadata of a safe action client or middleware function.
+// Use `InferMetadata` to infer the type of the metadata of a cool action client or middleware function.
 // Here's an example with a middleware function:
 type inferredMiddlewareMetadata = InferMetadata<typeof authMiddleware>;
 /*
@@ -170,8 +170,8 @@ type inferredMiddlewareMetadata = InferMetadata<typeof authMiddleware>;
 }
 */
 
-// Use `InferServerError` to infer the type of the `serverError` of a safe action client, middleware function,
-// or safe action function. Here's an example with a safe action:
+// Use `InferServerError` to infer the type of the `serverError` of a cool action client, middleware function,
+// or cool action function. Here's an example with a cool action:
 type inferredServerError = InferServerError<typeof testAction>;
 /*
 {
@@ -196,21 +196,21 @@ Here's a list of utility types exported from `next-cool-action/hooks`:
 import type { testAction } from "@/app/test-action";
 
 // Use `InferUseActionHookReturn` to infer the return type of the `useAction` hook with a provided
-// safe action function.
+// cool action function.
 type inferredTestActionHookReturn = InferUseActionHookReturn<typeof testAction>;
 /*
 {
   execute: (input: { username: string }) => void;
-  executeAsync: (input: { username: string }) => Promise<SafeActionResult>;
+  executeAsync: (input: { username: string }) => Promise<CoolActionResult>;
   input: { username: string };
-  result: SafeActionResult;
+  result: CoolActionResult;
   reset: () => void;
   status: HookActionStatus;
 } & HookShorthandStatus
 */
 
 // Use `InferUseActionHookReturn` to infer the return type of the `useOptimisticAction` hook with a provided
-// safe action function. You can pass the server state as the second generic parameter, which defaults
+// cool action function. You can pass the server state as the second generic parameter, which defaults
 // to `any`.
 type inferredTestActionOptimisticHookReturn = InferUseOptimisticActionHookReturn<
   typeof testAction,
@@ -219,9 +219,9 @@ type inferredTestActionOptimisticHookReturn = InferUseOptimisticActionHookReturn
 /*
 {
   execute: (input: { username: string }) => void;
-  executeAsync: (input: { username: string }) => Promise<SafeActionResult>;
+  executeAsync: (input: { username: string }) => Promise<CoolActionResult>;
   input: { username: string };
-  result: SafeActionResult;
+  result: CoolActionResult;
   reset: () => void;
   status: HookActionStatus;
   optimisticState: { myServerState: { foo: string } };
@@ -229,7 +229,7 @@ type inferredTestActionOptimisticHookReturn = InferUseOptimisticActionHookReturn
 */
 
 // Use `InferUseStateActionHookReturn` to infer the return type of the `useStateAction` hook with a
-// provided stateful safe action. In this case, by providing the type of `testAction` as the
+// provided stateful cool action. In this case, by providing the type of `testAction` as the
 // generic parameter will, the resulting type will be `never`, because `testAction` is not defined
 // using `stateAction()` method. Supposing that we change the definition of the function to be stateful,
 // the resulting type will be:
@@ -238,7 +238,7 @@ type inferredTestActionStateHookReturn = InferUseStateActionHookReturn<typeof te
 {
   execute: (input: { username: string }) => void;
   input: { username: string };
-  result: SafeActionResult;
+  result: CoolActionResult;
   status: HookActionStatus;
 } & HookShorthandStatus
 */

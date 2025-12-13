@@ -1,6 +1,6 @@
 "use server";
 
-import { ActionError, action } from "@/lib/safe-action";
+import { ActionError, action } from "@/lib/cool-action";
 import { z } from "zod";
 
 const schema = z.object({

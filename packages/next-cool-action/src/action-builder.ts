@@ -1,33 +1,33 @@
 import { deepmerge } from "deepmerge-ts";
 import type { } from "zod";
 import type {
-    DVES,
-    MiddlewareResult,
-    SafeActionClientArgs,
-    SafeActionFn,
-    SafeActionResult,
-    SafeActionUtils,
-    SafeStateActionFn,
-    ServerCodeFn,
-    StateServerCodeFn,
+	CoolActionClientArgs,
+	CoolActionFn,
+	CoolActionResult,
+	CoolActionUtils,
+	CoolStateActionFn,
+	DVES,
+	MiddlewareResult,
+	ServerCodeFn,
+	StateServerCodeFn,
 } from "./index.types";
 import { FrameworkErrorHandler } from "./next/errors";
 import type {
-    InferInputArray,
-    InferInputOrDefault,
-    InferOutputArray,
-    InferOutputOrDefault,
-    StandardSchemaV1,
+	InferInputArray,
+	InferInputOrDefault,
+	InferOutputArray,
+	InferOutputOrDefault,
+	StandardSchemaV1,
 } from "./standard-schema";
 import { standardParse } from "./standard-schema";
 import { DEFAULT_SERVER_ERROR_MESSAGE, isError, winningBoolean } from "./utils";
 import {
-    ActionBindArgsValidationError,
-    ActionMetadataValidationError,
-    ActionOutputDataValidationError,
-    ActionServerValidationError,
-    ActionValidationError,
-    buildValidationErrors,
+	ActionBindArgsValidationError,
+	ActionMetadataValidationError,
+	ActionOutputDataValidationError,
+	ActionServerValidationError,
+	ActionValidationError,
+	buildValidationErrors,
 } from "./validation-errors";
 import type { ValidationErrors } from "./validation-errors.types";
 
@@ -42,20 +42,20 @@ export function actionBuilder<
 	OS extends StandardSchemaV1 | undefined = undefined, // output schema
 	const BAS extends readonly StandardSchemaV1[] = [],
 	CVE = undefined,
->(args: SafeActionClientArgs<ServerError, ODVES, MetadataSchema, MD, true, Ctx, ISF, IS, OS, BAS, CVE>) {
+>(args: CoolActionClientArgs<ServerError, ODVES, MetadataSchema, MD, true, Ctx, ISF, IS, OS, BAS, CVE>) {
 	const bindArgsSchemas = args.bindArgsSchemas ?? [];
 
 	function buildAction({ withState }: { withState: false }): {
 		action: <Data extends InferOutputOrDefault<OS, any>>(
 			serverCodeFn: ServerCodeFn<MD, Ctx, IS, BAS, Data>,
-			utils?: SafeActionUtils<ServerError, MD, Ctx, IS, BAS, CVE, Data>
-		) => SafeActionFn<ServerError, IS, BAS, CVE, Data>;
+			utils?: CoolActionUtils<ServerError, MD, Ctx, IS, BAS, CVE, Data>
+		) => CoolActionFn<ServerError, IS, BAS, CVE, Data>;
 	};
 	function buildAction({ withState }: { withState: true }): {
 		action: <Data extends InferOutputOrDefault<OS, any>>(
 			serverCodeFn: StateServerCodeFn<ServerError, MD, Ctx, IS, BAS, CVE, Data>,
-			utils?: SafeActionUtils<ServerError, MD, Ctx, IS, BAS, CVE, Data>
-		) => SafeStateActionFn<ServerError, IS, BAS, CVE, Data>;
+			utils?: CoolActionUtils<ServerError, MD, Ctx, IS, BAS, CVE, Data>
+		) => CoolStateActionFn<ServerError, IS, BAS, CVE, Data>;
 	};
 	function buildAction({ withState }: { withState: boolean }) {
 		return {
@@ -63,12 +63,12 @@ export function actionBuilder<
 				serverCodeFn:
 					| ServerCodeFn<MD, Ctx, IS, BAS, Data>
 					| StateServerCodeFn<ServerError, MD, Ctx, IS, BAS, CVE, Data>,
-				utils?: SafeActionUtils<ServerError, MD, Ctx, IS, BAS, CVE, Data>
+				utils?: CoolActionUtils<ServerError, MD, Ctx, IS, BAS, CVE, Data>
 			) => {
 				return async (...clientInputs: unknown[]) => {
 					let currentCtx: object = {};
 					const middlewareResult: MiddlewareResult<ServerError, object> = { success: false };
-					type PrevResult = SafeActionResult<ServerError, IS, CVE, Data>;
+					type PrevResult = CoolActionResult<ServerError, IS, CVE, Data>;
 					let prevResult: PrevResult = {};
 					const parsedInputDatas: any[] = [];
 					const frameworkErrorHandler = new FrameworkErrorHandler();
@@ -317,7 +317,7 @@ export function actionBuilder<
 						throw frameworkErrorHandler.error;
 					}
 
-					const actionResult: SafeActionResult<ServerError, IS, CVE, Data> = {};
+					const actionResult: CoolActionResult<ServerError, IS, CVE, Data> = {};
 
 					if (typeof middlewareResult.validationErrors !== "undefined") {
 						// `utils.throwValidationErrors` has higher priority since it's set at the action level.

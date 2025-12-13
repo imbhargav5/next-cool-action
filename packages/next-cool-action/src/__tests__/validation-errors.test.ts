@@ -5,7 +5,7 @@ import { test } from "node:test";
 import { z } from "zod";
 import type { ValidationErrors } from "..";
 import {
-	createSafeActionClient,
+	createCoolActionClient,
 	DEFAULT_SERVER_ERROR_MESSAGE,
 	flattenValidationErrors,
 	formatValidationErrors,
@@ -15,7 +15,7 @@ import { ActionOutputDataValidationError } from "../validation-errors";
 
 // Default client tests.
 
-const dac = createSafeActionClient();
+const dac = createCoolActionClient();
 
 test("action with invalid input gives back an object with correct `validationErrors` (default formatted shape)", async () => {
 	const schema = z.object({
@@ -204,7 +204,7 @@ test("action with invalid output data returns the default `serverError`", async 
 });
 
 test("action with invalid output data throws an error of the correct type", async () => {
-	const tac = createSafeActionClient({
+	const tac = createCoolActionClient({
 		handleServerError: (e) => {
 			// disable server error logging for this test
 			throw e;
@@ -241,7 +241,7 @@ test("action with invalid output data throws an error of the correct type", asyn
 
 // Formatted shape tests (same as default).
 
-const foac = createSafeActionClient({
+const foac = createCoolActionClient({
 	defaultValidationErrorsShape: "formatted",
 });
 
@@ -379,7 +379,7 @@ test("action with invalid input gives back an object with correct `validationErr
 
 // Flattened shape tests.
 
-const flac = createSafeActionClient({
+const flac = createCoolActionClient({
 	defaultValidationErrorsShape: "flattened",
 });
 
@@ -653,7 +653,7 @@ test("action with validation errors and `throwValidationErrors` option set to tr
 	await assert.rejects(async () => await action({ username: "12", password: "34" }));
 });
 
-const tveac = createSafeActionClient({
+const tveac = createCoolActionClient({
 	throwValidationErrors: true,
 });
 

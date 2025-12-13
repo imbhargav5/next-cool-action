@@ -1,6 +1,6 @@
 "use server";
 
-import { action } from "@/lib/safe-action";
+import { action } from "@/lib/cool-action";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 

@@ -1,5 +1,5 @@
+import { CoolActionClient } from "./cool-action-client";
 import type { CreateClientOpts, DVES, HandleServerErrorFn } from "./index.types";
-import { SafeActionClient } from "./safe-action-client";
 import type { InferOutputOrDefault, StandardSchemaV1 } from "./standard-schema";
 import { DEFAULT_SERVER_ERROR_MESSAGE } from "./utils";
 import { flattenValidationErrors, formatValidationErrors } from "./validation-errors";
@@ -20,13 +20,13 @@ export type * from "./index.types";
 export type * from "./validation-errors.types";
 
 /**
- * Create a new safe action client.
+ * Create a new cool action client.
  * Note: this client only works with Zod as the validation library.
  * @param createOpts Initialization options
  *
  * {@link https://next-cool-action.dev/docs/define-actions/create-the-client#initialization-options See docs for more information}
  */
-export const createSafeActionClient = <
+export const createCoolActionClient = <
 	ODVES extends DVES | undefined = undefined,
 	ServerError = string,
 	MetadataSchema extends StandardSchemaV1 | undefined = undefined,
@@ -41,7 +41,7 @@ export const createSafeActionClient = <
 			return DEFAULT_SERVER_ERROR_MESSAGE as ServerError;
 		});
 
-	return new SafeActionClient<
+	return new CoolActionClient<
 		ServerError,
 		ODVES,
 		MetadataSchema,

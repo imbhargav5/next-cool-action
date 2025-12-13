@@ -35,7 +35,7 @@
 ├─────────────────────────────────────────────────────────────────────────────────┤
 │                                                                                  │
 │  ┌──────────────────────────────────────────────────────────────────────────┐   │
-│  │                        SafeActionClient                                   │   │
+│  │                        CoolActionClient                                   │   │
 │  │  ┌─────────┐  ┌──────────┐  ┌─────────────┐  ┌──────────────┐           │   │
 │  │  │  use()  │─▶│metadata()│─▶│inputSchema()│─▶│   action()   │           │   │
 │  │  └─────────┘  └──────────┘  └─────────────┘  └──────────────┘           │   │
@@ -54,7 +54,7 @@
 │                                      │                                           │
 │                                      ▼                                           │
 │                        ┌─────────────────────────┐                               │
-│                        │   SafeActionResult      │                               │
+│                        │   CoolActionResult      │                               │
 │                        │  { data, serverError,   │                               │
 │                        │    validationErrors }   │                               │
 │                        └─────────────────────────┘                               │
@@ -76,7 +76,7 @@
                     │                        │                        │
                     ▼                        ▼                        ▼
         ┌───────────────────┐    ┌───────────────────┐    ┌───────────────────┐
-        │ safe-action-      │    │   validation-     │    │    middleware.ts  │
+        │ cool-action-      │    │   validation-     │    │    middleware.ts  │
         │ client.ts         │    │   errors.ts       │    │                   │
         └─────────┬─────────┘    └─────────┬─────────┘    └───────────────────┘
                   │                        │
@@ -140,7 +140,7 @@
 │                            CLIENT LAYER                                      │
 │                                                                              │
 │  ┌────────────────────────────────────────────────────────────────────────┐ │
-│  │                      SafeActionClient                                   │ │
+│  │                      CoolActionClient                                   │ │
 │  │                                                                         │ │
 │  │   • Builder pattern for action configuration                           │ │
 │  │   • Middleware registration (use())                                    │ │
@@ -275,7 +275,7 @@
 │   │                                                                          │   │
 │   │  Functions:                        Classes & Errors:                     │   │
 │   │  ─────────                         ──────────────────                    │   │
-│   │  • createSafeActionClient()        • ActionValidationError               │   │
+│   │  • createCoolActionClient()        • ActionValidationError               │   │
 │   │  • createMiddleware()              • ActionBindArgsValidationError       │   │
 │   │  • flattenValidationErrors()       • ActionMetadataValidationError       │   │
 │   │  • formatValidationErrors()        • ActionOutputDataValidationError     │   │
@@ -283,9 +283,9 @@
 │   │                                                                          │   │
 │   │  Constants:                        Types (exported):                     │   │
 │   │  ──────────                        ─────────────────                     │   │
-│   │  • DEFAULT_SERVER_ERROR_MESSAGE    • SafeActionResult                    │   │
-│   │                                    • SafeActionFn                        │   │
-│   │                                    • SafeStateActionFn                   │   │
+│   │  • DEFAULT_SERVER_ERROR_MESSAGE    • CoolActionResult                    │   │
+│   │                                    • CoolActionFn                        │   │
+│   │                                    • CoolStateActionFn                   │   │
 │   │                                    • MiddlewareFn                        │   │
 │   │                                    • ValidationErrors                    │   │
 │   │                                    • (+ many more...)                    │   │
@@ -300,7 +300,7 @@
 
 ┌─────────────────────────────────────────────────────────────────────────────────┐
 │                                                                                  │
-│                           SafeActionClient                                       │
+│                           CoolActionClient                                       │
 │                                                                                  │
 │   ┌───────────────────────────────────────────────────────────────────────┐     │
 │   │                                                                        │     │
@@ -318,13 +318,13 @@
 │   │                                                                        │     │
 │   │  Public Methods:                                                       │     │
 │   │  ───────────────                                                       │     │
-│   │  • use(middlewareFn)        → new SafeActionClient (extended)          │     │
-│   │  • metadata(data)           → new SafeActionClient (with metadata)     │     │
-│   │  • inputSchema(schema)      → new SafeActionClient (with input)        │     │
-│   │  • bindArgsSchemas(schemas) → new SafeActionClient (with bind args)    │     │
-│   │  • outputSchema(schema)     → new SafeActionClient (with output)       │     │
-│   │  • action(serverCodeFn)     → SafeActionFn (callable function)         │     │
-│   │  • stateAction(serverCodeFn)→ SafeStateActionFn (stateful function)    │     │
+│   │  • use(middlewareFn)        → new CoolActionClient (extended)          │     │
+│   │  • metadata(data)           → new CoolActionClient (with metadata)     │     │
+│   │  • inputSchema(schema)      → new CoolActionClient (with input)        │     │
+│   │  • bindArgsSchemas(schemas) → new CoolActionClient (with bind args)    │     │
+│   │  • outputSchema(schema)     → new CoolActionClient (with output)       │     │
+│   │  • action(serverCodeFn)     → CoolActionFn (callable function)         │     │
+│   │  • stateAction(serverCodeFn)→ CoolStateActionFn (stateful function)    │     │
 │   │                                                                        │     │
 │   └───────────────────────────────────────────────────────────────────────┘     │
 │                                                                                  │
@@ -366,7 +366,7 @@
 │   │  6. Executes callbacks                                                 │     │
 │   │     • onSuccess / onError / onSettled / onNavigation                   │     │
 │   │                                                                        │     │
-│   │  7. Returns SafeActionResult                                           │     │
+│   │  7. Returns CoolActionResult                                           │     │
 │   │     • { data?, serverError?, validationErrors? }                       │     │
 │   │                                                                        │     │
 │   └───────────────────────────────────────────────────────────────────────┘     │
@@ -378,7 +378,7 @@
 
 ## Core Concepts
 
-### 1. SafeActionClient
+### 1. CoolActionClient
 The central class that provides a **builder pattern** for configuring and creating type-safe server actions. Each method returns a new instance, allowing for immutable chaining while preserving TypeScript type inference.
 
 ### 2. Middleware System
@@ -416,9 +416,9 @@ The library distinguishes between:
 
 ```
 packages/next-cool-action/src/
-├── index.ts                    # Main entry point, exports createSafeActionClient
+├── index.ts                    # Main entry point, exports createCoolActionClient
 ├── index.types.ts              # Core type definitions
-├── safe-action-client.ts       # SafeActionClient builder class
+├── cool-action-client.ts       # CoolActionClient builder class
 ├── action-builder.ts           # Action execution engine
 ├── middleware.ts               # createMiddleware utility
 ├── standard-schema.ts          # Standard Schema interface & parsing
@@ -446,16 +446,16 @@ packages/next-cool-action/src/
 ## Quick Start Example
 
 ```typescript
-// 1. Create the client (safe-action.ts)
-import { createSafeActionClient } from "next-cool-action";
+// 1. Create the client (cool-action.ts)
+import { createCoolActionClient } from "next-cool-action";
 
-export const action = createSafeActionClient();
+export const action = createCoolActionClient();
 
 // 2. Define an action (delete-user.ts)
 "use server";
 
 import { z } from "zod";
-import { action } from "./safe-action";
+import { action } from "./cool-action";
 
 export const deleteUser = action
   .inputSchema(z.object({ userId: z.string().uuid() }))

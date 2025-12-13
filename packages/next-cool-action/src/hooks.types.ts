@@ -1,4 +1,4 @@
-import type { NavigationKind, SafeActionFn, SafeActionResult } from "./index.types";
+import type { CoolActionFn, CoolActionResult, NavigationKind } from "./index.types";
 import type { InferInputOrDefault, StandardSchemaV1 } from "./standard-schema";
 import type { MaybePromise, Prettify } from "./utils.types";
 
@@ -9,7 +9,7 @@ export type HookCallbacks<ServerError, S extends StandardSchemaV1 | undefined, C
 	onExecute?: (args: { input: InferInputOrDefault<S, undefined> }) => MaybePromise<unknown>;
 	onSuccess?: (args: { data: Data; input: InferInputOrDefault<S, undefined> }) => MaybePromise<unknown>;
 	onError?: (args: {
-		error: Prettify<Omit<SafeActionResult<ServerError, S, CVE, Data>, "data">> & { thrownError?: Error };
+		error: Prettify<Omit<CoolActionResult<ServerError, S, CVE, Data>, "data">> & { thrownError?: Error };
 		input: InferInputOrDefault<S, undefined>;
 	}) => MaybePromise<unknown>;
 	onNavigation?: (args: {
@@ -17,19 +17,19 @@ export type HookCallbacks<ServerError, S extends StandardSchemaV1 | undefined, C
 		navigationKind: NavigationKind;
 	}) => MaybePromise<unknown>;
 	onSettled?: (args: {
-		result: Prettify<SafeActionResult<ServerError, S, CVE, Data>>;
+		result: Prettify<CoolActionResult<ServerError, S, CVE, Data>>;
 		input: InferInputOrDefault<S, undefined>;
 		navigationKind?: NavigationKind;
 	}) => MaybePromise<unknown>;
 };
 
 /**
- * Type of the safe action function passed to hooks. Same as `SafeActionFn` except it accepts
+ * Type of the cool action function passed to hooks. Same as `CoolActionFn` except it accepts
  * just a single input, without bind arguments.
  */
-export type HookSafeActionFn<ServerError, S extends StandardSchemaV1 | undefined, CVE, Data> = (
+export type HookCoolActionFn<ServerError, S extends StandardSchemaV1 | undefined, CVE, Data> = (
 	input: InferInputOrDefault<S, undefined>
-) => Promise<SafeActionResult<ServerError, S, CVE, Data>>;
+) => Promise<CoolActionResult<ServerError, S, CVE, Data>>;
 
 /**
  * Type of the action status returned by `useAction` and `useOptimisticAction` hooks.
@@ -54,9 +54,9 @@ export type HookShorthandStatus = {
  */
 export type UseActionHookReturn<ServerError, S extends StandardSchemaV1 | undefined, CVE, Data> = {
 	execute: (input: InferInputOrDefault<S, void>) => void;
-	executeAsync: (input: InferInputOrDefault<S, void>) => Promise<SafeActionResult<ServerError, S, CVE, Data>>;
+	executeAsync: (input: InferInputOrDefault<S, void>) => Promise<CoolActionResult<ServerError, S, CVE, Data>>;
 	input: InferInputOrDefault<S, undefined>;
-	result: Prettify<SafeActionResult<ServerError, S, CVE, Data>>;
+	result: Prettify<CoolActionResult<ServerError, S, CVE, Data>>;
 	reset: () => void;
 	status: HookActionStatus;
 } & HookShorthandStatus;
@@ -79,7 +79,7 @@ export type UseOptimisticActionHookReturn<
  * Type of the return object of the `useAction` hook.
  */
 export type InferUseActionHookReturn<T extends Function> =
-	T extends SafeActionFn<infer ServerError, infer S extends StandardSchemaV1 | undefined, any, infer CVE, infer Data>
+	T extends CoolActionFn<infer ServerError, infer S extends StandardSchemaV1 | undefined, any, infer CVE, infer Data>
 		? UseActionHookReturn<ServerError, S, CVE, Data>
 		: never;
 
@@ -87,6 +87,6 @@ export type InferUseActionHookReturn<T extends Function> =
  * Type of the return object of the `useOptimisticAction` hook.
  */
 export type InferUseOptimisticActionHookReturn<T extends Function, State = any> =
-	T extends SafeActionFn<infer ServerError, infer S extends StandardSchemaV1 | undefined, any, infer CVE, infer Data>
+	T extends CoolActionFn<infer ServerError, infer S extends StandardSchemaV1 | undefined, any, infer CVE, infer Data>
 		? UseOptimisticActionHookReturn<ServerError, S, CVE, Data, State>
 		: never;

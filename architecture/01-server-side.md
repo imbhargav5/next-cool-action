@@ -4,10 +4,10 @@ This document covers the server-side components of `next-cool-action`, including
 
 ---
 
-## Diagram 1: createSafeActionClient() Initialization Flow
+## Diagram 1: createCoolActionClient() Initialization Flow
 
 ```
-                    createSafeActionClient(options?)
+                    createCoolActionClient(options?)
                               │
                               ▼
          ┌────────────────────────────────────────┐
@@ -38,9 +38,9 @@ This document covers the server-side components of `next-cool-action`, including
                               │
                               ▼
          ┌────────────────────────────────────────┐
-         │    Create SafeActionClient Instance    │
+         │    Create CoolActionClient Instance    │
          │                                         │
-         │  new SafeActionClient({                 │
+         │  new CoolActionClient({                 │
          │    middlewareFns: [                     │
          │      async ({ next }) => next({ ctx: {} })  ← Initial empty middleware
          │    ],                                   │
@@ -59,7 +59,7 @@ This document covers the server-side components of `next-cool-action`, including
                               │
                               ▼
                    ┌───────────────────┐
-                   │  SafeActionClient │
+                   │  CoolActionClient │
                    │     Instance      │
                    └───────────────────┘
 ```
@@ -67,8 +67,8 @@ This document covers the server-side components of `next-cool-action`, including
 ### Code Reference
 
 ```typescript
-// index.ts - createSafeActionClient function
-export const createSafeActionClient = <
+// index.ts - createCoolActionClient function
+export const createCoolActionClient = <
   ODVES extends DVES | undefined = undefined,
   ServerError = string,
   MetadataSchema extends StandardSchemaV1 | undefined = undefined,
@@ -82,7 +82,7 @@ export const createSafeActionClient = <
       return DEFAULT_SERVER_ERROR_MESSAGE as ServerError;
     });
 
-  return new SafeActionClient({
+  return new CoolActionClient({
     middlewareFns: [async ({ next }) => next({ ctx: {} })],  // Initial middleware
     handleServerError,
     inputSchemaFn: undefined,
@@ -103,69 +103,69 @@ export const createSafeActionClient = <
 
 ---
 
-## Diagram 2: SafeActionClient Builder Chain Visualization
+## Diagram 2: CoolActionClient Builder Chain Visualization
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│                         SafeActionClient Builder Pattern                         │
+│                         CoolActionClient Builder Pattern                         │
 │                                                                                  │
-│  Each method returns a NEW SafeActionClient instance with updated configuration │
+│  Each method returns a NEW CoolActionClient instance with updated configuration │
 │  This enables type inference to track accumulated types through the chain       │
 └─────────────────────────────────────────────────────────────────────────────────┘
 
-    createSafeActionClient()
+    createCoolActionClient()
             │
-            │  Returns: SafeActionClient<string, undefined, undefined, ...>
+            │  Returns: CoolActionClient<string, undefined, undefined, ...>
             ▼
     ┌───────────────────┐
-    │  SafeActionClient │─── #args (private state)
+    │  CoolActionClient │─── #args (private state)
     │     Instance 1    │    { middlewareFns: [...], ctx: {} }
     └─────────┬─────────┘
               │
               │ .use(authMiddleware)
               │
-              │ Returns: SafeActionClient<string, undefined, undefined, ..., { userId: string }>
+              │ Returns: CoolActionClient<string, undefined, undefined, ..., { userId: string }>
               ▼
     ┌───────────────────┐
-    │  SafeActionClient │─── #args (NEW state)
+    │  CoolActionClient │─── #args (NEW state)
     │     Instance 2    │    { middlewareFns: [..., authMiddleware], ctx: { userId } }
     └─────────┬─────────┘
               │
               │ .metadata({ actionName: "test" })
               │
-              │ Returns: SafeActionClient<..., MD = { actionName: string }, MDProvided = true>
+              │ Returns: CoolActionClient<..., MD = { actionName: string }, MDProvided = true>
               ▼
     ┌───────────────────┐
-    │  SafeActionClient │─── #args
+    │  CoolActionClient │─── #args
     │     Instance 3    │    { ..., metadata: { actionName: "test" } }
     └─────────┬─────────┘
               │
               │ .inputSchema(z.object({ userId: z.string() }))
               │
-              │ Returns: SafeActionClient<..., IS = { userId: string }>
+              │ Returns: CoolActionClient<..., IS = { userId: string }>
               ▼
     ┌───────────────────┐
-    │  SafeActionClient │─── #args
+    │  CoolActionClient │─── #args
     │     Instance 4    │    { ..., inputSchemaFn: () => schema }
     └─────────┬─────────┘
               │
               │ .outputSchema(z.object({ success: z.boolean() }))
               │
-              │ Returns: SafeActionClient<..., OS = { success: boolean }>
+              │ Returns: CoolActionClient<..., OS = { success: boolean }>
               ▼
     ┌───────────────────┐
-    │  SafeActionClient │─── #args
+    │  CoolActionClient │─── #args
     │     Instance 5    │    { ..., outputSchema: schema }
     └─────────┬─────────┘
               │
               │ .action(async ({ parsedInput, ctx }) => { ... })
               │
-              │ Returns: SafeActionFn (the actual callable function)
+              │ Returns: CoolActionFn (the actual callable function)
               ▼
     ┌─────────────────────────────────────────┐
-    │           SafeActionFn                   │
+    │           CoolActionFn                   │
     │  (input: { userId: string }) =>          │
-    │    Promise<SafeActionResult<...>>        │
+    │    Promise<CoolActionResult<...>>        │
     └─────────────────────────────────────────┘
 ```
 
@@ -178,7 +178,7 @@ export const createSafeActionClient = <
 │                          Method Chaining Flow                                    │
 └─────────────────────────────────────────────────────────────────────────────────┘
 
-createSafeActionClient()
+createCoolActionClient()
          │
          ▼
     ┌─────────────────────────────────────────────────────────────────┐
@@ -208,7 +208,7 @@ createSafeActionClient()
     └─────────────────────────────────────────────────────────────────┘
          │
          │  .metadata({ actionName: "deleteUser" })
-         │  (REQUIRED if metadataSchema was defined in createSafeActionClient)
+         │  (REQUIRED if metadataSchema was defined in createCoolActionClient)
          ▼
     ┌─────────────────────────────────────────────────────────────────┐
     │                  Client with Metadata                            │
@@ -248,7 +248,7 @@ createSafeActionClient()
     ┌─────────────────────────────────────────────────────────────────┐
     │                    Final Action Function                         │
     │                                                                  │
-    │  SafeActionFn or SafeStateActionFn                              │
+    │  CoolActionFn or CoolStateActionFn                              │
     │  Ready to be called from client or passed to hooks              │
     └─────────────────────────────────────────────────────────────────┘
 ```
@@ -261,7 +261,7 @@ createSafeActionClient()
 ┌─────────────────────────────────────────────────────────────────────────────────┐
 │                           actionBuilder(args)                                    │
 │                                                                                  │
-│   Takes SafeActionClientArgs and returns { action, stateAction } methods        │
+│   Takes CoolActionClientArgs and returns { action, stateAction } methods        │
 └─────────────────────────────────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -279,7 +279,7 @@ createSafeActionClient()
 │  withState: false   │              │  withState: true    │
 │                     │              │                     │
 │  Returns:           │              │  Returns:           │
-│  SafeActionFn       │              │  SafeStateActionFn  │
+│  CoolActionFn       │              │  CoolStateActionFn  │
 │                     │              │                     │
 │  No prevResult      │              │  Has prevResult     │
 │  argument           │              │  as 2nd argument    │
@@ -307,7 +307,7 @@ createSafeActionClient()
 
 let currentCtx: object = {};                          // Accumulated context
 const middlewareResult: MiddlewareResult = { success: false };  // Execution result
-let prevResult: SafeActionResult = {};                // Previous result (stateful only)
+let prevResult: CoolActionResult = {};                // Previous result (stateful only)
 const parsedInputDatas: any[] = [];                   // Validated inputs
 const frameworkErrorHandler = new FrameworkErrorHandler();  // Next.js error handler
 let serverErrorHandled = false;                       // Track if error was handled
@@ -696,7 +696,7 @@ const authMiddleware = createMiddleware<{
 });
 
 // Use in client
-const action = createSafeActionClient()
+const action = createCoolActionClient()
   .use(async ({ next }) => next({ ctx: { requestId: crypto.randomUUID() } }))
   .use(authMiddleware);  // Now authMiddleware has access to requestId
 ```
@@ -782,7 +782,7 @@ if (frameworkErrorHandler.error) {
 
 ### Why Return New Instances Instead of Mutating?
 
-Each builder method (`use()`, `inputSchema()`, etc.) returns a **new** `SafeActionClient` instance rather than mutating the existing one. This design choice enables:
+Each builder method (`use()`, `inputSchema()`, etc.) returns a **new** `CoolActionClient` instance rather than mutating the existing one. This design choice enables:
 
 1. **Type Accumulation**: TypeScript can track how types change through the chain
 2. **Immutability**: Previous client instances remain unchanged
@@ -790,7 +790,7 @@ Each builder method (`use()`, `inputSchema()`, etc.) returns a **new** `SafeActi
 
 ```typescript
 // Both authAction and adminAction share the base middleware
-const baseAction = createSafeActionClient()
+const baseAction = createCoolActionClient()
   .use(loggingMiddleware);
 
 const authAction = baseAction

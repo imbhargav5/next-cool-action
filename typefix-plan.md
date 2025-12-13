@@ -30,10 +30,10 @@ export const loginUser = action
 
 ### The Problem: Derived Type Parameter
 
-In `safe-action-client.ts`, the `IS` (input schema) type parameter is **derived** from `ISF` (input schema function):
+In `cool-action-client.ts`, the `IS` (input schema) type parameter is **derived** from `ISF` (input schema function):
 
 ```typescript
-export class SafeActionClient<
+export class CoolActionClient<
   ServerError,
   ODVES extends DVES | undefined,
   MetadataSchema extends StandardSchemaV1 | undefined = undefined,
@@ -57,7 +57,7 @@ export class SafeActionClient<
 
 2. **Awaited Complexity**: `Awaited<ReturnType<ISF>>` adds another layer of type extraction that compounds the inference problem.
 
-3. **Method Chain Type Loss**: Each method (`.use()`, `.metadata()`, `.inputSchema()`) returns a new `SafeActionClient` instance. Without explicit type annotations, TypeScript loses track of the generic parameters after 3-4 chained calls.
+3. **Method Chain Type Loss**: Each method (`.use()`, `.metadata()`, `.inputSchema()`) returns a new `CoolActionClient` instance. Without explicit type annotations, TypeScript loses track of the generic parameters after 3-4 chained calls.
 
 4. **@ts-expect-error Evidence**: The presence of `@ts-expect-error` comments in the `inputSchema()` method (lines 88, 92, 95) indicates the developers couldn't achieve proper type inference at these critical junctures.
 
@@ -69,7 +69,7 @@ export class SafeActionClient<
 2. inputSchema() wraps it in async function:
    inputSchemaFn = async () => schema  // Runtime: works fine
 
-3. New SafeActionClient created, TypeScript tries to derive:
+3. New CoolActionClient created, TypeScript tries to derive:
    ISF = () => Promise<ZodObject<...>>
    IS = Awaited<ReturnType<ISF>> = ZodObject<...>  // ❌ TypeScript gives up here
 
@@ -94,13 +94,13 @@ The runtime still needs `ISF` (the async function wrapper) for async schema supp
 
 ## Implementation Plan
 
-### File 1: `packages/next-cool-action/src/safe-action-client.ts`
+### File 1: `packages/next-cool-action/src/cool-action-client.ts`
 
 #### Change 1.1: Update Class Type Parameters (lines 17-29)
 
 **Before:**
 ```typescript
-export class SafeActionClient<
+export class CoolActionClient<
   ServerError,
   ODVES extends DVES | undefined,
   MetadataSchema extends StandardSchemaV1 | undefined = undefined,
@@ -117,7 +117,7 @@ export class SafeActionClient<
 
 **After:**
 ```typescript
-export class SafeActionClient<
+export class CoolActionClient<
   ServerError,
   ODVES extends DVES | undefined,
   MetadataSchema extends StandardSchemaV1 | undefined = undefined,
@@ -137,7 +137,7 @@ export class SafeActionClient<
 **Before:**
 ```typescript
 use<NextCtx extends object>(middlewareFn: MiddlewareFn<ServerError, MD, Ctx, Ctx & NextCtx>) {
-  return new SafeActionClient({
+  return new CoolActionClient({
     ...this.#args,
     middlewareFns: [...this.#args.middlewareFns, middlewareFn],
     ctxType: {} as Ctx & NextCtx,
@@ -149,8 +149,8 @@ use<NextCtx extends object>(middlewareFn: MiddlewareFn<ServerError, MD, Ctx, Ctx
 ```typescript
 use<NextCtx extends object>(
   middlewareFn: MiddlewareFn<ServerError, MD, Ctx, Ctx & NextCtx>
-): SafeActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx & NextCtx, ISF, IS, OS, BAS, CVE> {
-  return new SafeActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx & NextCtx, ISF, IS, OS, BAS, CVE>({
+): CoolActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx & NextCtx, ISF, IS, OS, BAS, CVE> {
+  return new CoolActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx & NextCtx, ISF, IS, OS, BAS, CVE>({
     ...this.#args,
     middlewareFns: [...this.#args.middlewareFns, middlewareFn],
     ctxType: {} as Ctx & NextCtx,
@@ -163,7 +163,7 @@ use<NextCtx extends object>(
 **Before:**
 ```typescript
 metadata(data: MD) {
-  return new SafeActionClient({
+  return new CoolActionClient({
     ...this.#args,
     metadata: data,
     metadataProvided: true,
@@ -173,8 +173,8 @@ metadata(data: MD) {
 
 **After:**
 ```typescript
-metadata(data: MD): SafeActionClient<ServerError, ODVES, MetadataSchema, MD, true, Ctx, ISF, IS, OS, BAS, CVE> {
-  return new SafeActionClient<ServerError, ODVES, MetadataSchema, MD, true, Ctx, ISF, IS, OS, BAS, CVE>({
+metadata(data: MD): CoolActionClient<ServerError, ODVES, MetadataSchema, MD, true, Ctx, ISF, IS, OS, BAS, CVE> {
+  return new CoolActionClient<ServerError, ODVES, MetadataSchema, MD, true, Ctx, ISF, IS, OS, BAS, CVE>({
     ...this.#args,
     metadata: data,
     metadataProvided: true,
@@ -198,7 +198,7 @@ inputSchema<
     handleValidationErrorsShape?: HandleValidationErrorsShapeFn<AIS, BAS, MD, Ctx, OCVE>;
   }
 ) {
-  return new SafeActionClient({
+  return new CoolActionClient({
     ...this.#args,
     // @ts-expect-error
     inputSchemaFn: (inputSchema[Symbol.toStringTag] === "AsyncFunction"
@@ -229,7 +229,7 @@ inputSchema<
   utils?: {
     handleValidationErrorsShape?: HandleValidationErrorsShapeFn<AIS, BAS, MD, Ctx, OCVE>;
   }
-): SafeActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, () => Promise<AIS>, AIS, OS, BAS, OCVE> {
+): CoolActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, () => Promise<AIS>, AIS, OS, BAS, OCVE> {
   // ✅ Explicit return type: IS is set to AIS (the resolved schema type)
 
   const newInputSchemaFn = (inputSchema[Symbol.toStringTag] === "AsyncFunction"
@@ -239,7 +239,7 @@ inputSchema<
       }
     : async () => inputSchema) as () => Promise<AIS>;
 
-  return new SafeActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, () => Promise<AIS>, AIS, OS, BAS, OCVE>({
+  return new CoolActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, () => Promise<AIS>, AIS, OS, BAS, OCVE>({
     ...this.#args,
     inputSchemaFn: newInputSchemaFn,
     handleValidationErrorsShape: (utils?.handleValidationErrorsShape ??
@@ -253,7 +253,7 @@ inputSchema<
 **Before:**
 ```typescript
 bindArgsSchemas<const OBAS extends readonly StandardSchemaV1[]>(bindArgsSchemas: OBAS) {
-  return new SafeActionClient({
+  return new CoolActionClient({
     ...this.#args,
     bindArgsSchemas,
     handleValidationErrorsShape: this.#args.handleValidationErrorsShape as unknown as HandleValidationErrorsShapeFn<
@@ -271,8 +271,8 @@ bindArgsSchemas<const OBAS extends readonly StandardSchemaV1[]>(bindArgsSchemas:
 ```typescript
 bindArgsSchemas<const OBAS extends readonly StandardSchemaV1[]>(
   bindArgsSchemas: OBAS
-): SafeActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, ISF, IS, OS, OBAS, CVE> {
-  return new SafeActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, ISF, IS, OS, OBAS, CVE>({
+): CoolActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, ISF, IS, OS, OBAS, CVE> {
+  return new CoolActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, ISF, IS, OS, OBAS, CVE>({
     ...this.#args,
     bindArgsSchemas,
     handleValidationErrorsShape: this.#args.handleValidationErrorsShape as unknown as HandleValidationErrorsShapeFn<
@@ -291,7 +291,7 @@ bindArgsSchemas<const OBAS extends readonly StandardSchemaV1[]>(
 **Before:**
 ```typescript
 outputSchema<OOS extends StandardSchemaV1>(dataSchema: OOS) {
-  return new SafeActionClient({
+  return new CoolActionClient({
     ...this.#args,
     outputSchema: dataSchema,
   });
@@ -302,8 +302,8 @@ outputSchema<OOS extends StandardSchemaV1>(dataSchema: OOS) {
 ```typescript
 outputSchema<OOS extends StandardSchemaV1>(
   dataSchema: OOS
-): SafeActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, ISF, IS, OOS, BAS, CVE> {
-  return new SafeActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, ISF, IS, OOS, BAS, CVE>({
+): CoolActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, ISF, IS, OOS, BAS, CVE> {
+  return new CoolActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, ISF, IS, OOS, BAS, CVE>({
     ...this.#args,
     outputSchema: dataSchema,
   });
@@ -336,11 +336,11 @@ schema = this.inputSchema;
 
 ### File 2: `packages/next-cool-action/src/index.types.ts`
 
-#### Change 2.1: Update `SafeActionClientArgs` Type (lines 36-61)
+#### Change 2.1: Update `CoolActionClientArgs` Type (lines 36-61)
 
 **Before:**
 ```typescript
-export type SafeActionClientArgs<
+export type CoolActionClientArgs<
   ServerError,
   ODVES extends DVES | undefined,
   MetadataSchema extends StandardSchemaV1 | undefined = undefined,
@@ -359,7 +359,7 @@ export type SafeActionClientArgs<
 
 **After:**
 ```typescript
-export type SafeActionClientArgs<
+export type CoolActionClientArgs<
   ServerError,
   ODVES extends DVES | undefined,
   MetadataSchema extends StandardSchemaV1 | undefined = undefined,
@@ -395,7 +395,7 @@ export function actionBuilder<
   OS extends StandardSchemaV1 | undefined = undefined,
   const BAS extends readonly StandardSchemaV1[] = [],
   CVE = undefined,
->(args: SafeActionClientArgs<ServerError, ODVES, MetadataSchema, MD, true, Ctx, ISF, IS, OS, BAS, CVE>) {
+>(args: CoolActionClientArgs<ServerError, ODVES, MetadataSchema, MD, true, Ctx, ISF, IS, OS, BAS, CVE>) {
 ```
 
 **After:**
@@ -411,7 +411,7 @@ export function actionBuilder<
   OS extends StandardSchemaV1 | undefined = undefined,
   const BAS extends readonly StandardSchemaV1[] = [],
   CVE = undefined,
->(args: SafeActionClientArgs<ServerError, ODVES, MetadataSchema, MD, true, Ctx, ISF, IS, OS, BAS, CVE>) {
+>(args: CoolActionClientArgs<ServerError, ODVES, MetadataSchema, MD, true, Ctx, ISF, IS, OS, BAS, CVE>) {
 ```
 
 ---
@@ -422,7 +422,7 @@ export function actionBuilder<
 
 **Before:**
 ```typescript
-return new SafeActionClient({
+return new CoolActionClient({
   middlewareFns: [async ({ next }) => next({ ctx: {} })],
   handleServerError,
   inputSchemaFn: undefined,
@@ -442,7 +442,7 @@ return new SafeActionClient({
 
 **After:**
 ```typescript
-return new SafeActionClient<
+return new CoolActionClient<
   ServerError,
   ODVES,
   MetadataSchema,
@@ -478,16 +478,16 @@ return new SafeActionClient<
 
 | File | Location | Change Description |
 |------|----------|-------------------|
-| `safe-action-client.ts` | Line 25 | Remove `IS` derivation from `ISF`, make it independent with `= undefined` |
-| `safe-action-client.ts` | Lines 44-50 | Add explicit return type to `use()` method |
-| `safe-action-client.ts` | Lines 58-64 | Add explicit return type to `metadata()` method |
-| `safe-action-client.ts` | Lines 73-99 | Add explicit return type to `inputSchema()`, set `IS = AIS` |
-| `safe-action-client.ts` | Lines 101-104 | **Remove deprecated `.schema` alias entirely** |
-| `safe-action-client.ts` | Lines 112-124 | Add explicit return type to `bindArgsSchemas()` method |
-| `safe-action-client.ts` | Lines 132-137 | Add explicit return type to `outputSchema()` method |
+| `cool-action-client.ts` | Line 25 | Remove `IS` derivation from `ISF`, make it independent with `= undefined` |
+| `cool-action-client.ts` | Lines 44-50 | Add explicit return type to `use()` method |
+| `cool-action-client.ts` | Lines 58-64 | Add explicit return type to `metadata()` method |
+| `cool-action-client.ts` | Lines 73-99 | Add explicit return type to `inputSchema()`, set `IS = AIS` |
+| `cool-action-client.ts` | Lines 101-104 | **Remove deprecated `.schema` alias entirely** |
+| `cool-action-client.ts` | Lines 112-124 | Add explicit return type to `bindArgsSchemas()` method |
+| `cool-action-client.ts` | Lines 132-137 | Add explicit return type to `outputSchema()` method |
 | `index.types.ts` | Line 44 | Remove `IS` derivation from `ISF` |
 | `action-builder.ts` | Line 41 | Remove `IS` derivation from `ISF` |
-| `index.ts` | Lines 44-59 | Add explicit type parameters to `SafeActionClient` constructor |
+| `index.ts` | Lines 44-59 | Add explicit type parameters to `CoolActionClient` constructor |
 
 ---
 
@@ -537,13 +537,13 @@ After applying the library fix, these playground-specific issues may still need 
    - Verify the build output includes this type export
    - The library already has `export type * from "./hooks.types"` which should work
 
-2. **`handleServerError` parameter type** (`safe-action.ts:9`)
+2. **`handleServerError` parameter type** (`cool-action.ts:9`)
    ```typescript
    // Add explicit type annotation
    handleServerError: (e: Error) => { ... }
    ```
 
-3. **Middleware `.use()` callbacks** (`safe-action.ts:26, 57, 69`)
+3. **Middleware `.use()` callbacks** (`cool-action.ts:26, 57, 69`)
    - These should auto-fix once library types are correct
    - If not, add explicit parameter types
 
@@ -600,7 +600,7 @@ The fix works because:
 
 1. **Direct Type Propagation**: Instead of TypeScript trying to derive `IS` from `ISF` through complex conditionals, we explicitly set `IS` in each method's return type.
 
-2. **Explicit Return Types**: Every method that returns a new `SafeActionClient` now has an explicit return type that includes all generic parameters, ensuring no type information is lost.
+2. **Explicit Return Types**: Every method that returns a new `CoolActionClient` now has an explicit return type that includes all generic parameters, ensuring no type information is lost.
 
 3. **The Key Change in `inputSchema()`**: The return type explicitly sets `IS = AIS`, where `AIS` is the actual resolved schema type. This directly tells TypeScript what the schema type is, rather than asking it to derive it.
 

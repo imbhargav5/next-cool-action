@@ -3,9 +3,9 @@
 import assert from "node:assert";
 import { test } from "node:test";
 import { z } from "zod";
-import { createSafeActionClient } from "..";
+import { createCoolActionClient } from "..";
 
-const ac = createSafeActionClient();
+const ac = createCoolActionClient();
 
 test("action with no input schema returns empty object", async () => {
 	const action = ac.action(async () => {

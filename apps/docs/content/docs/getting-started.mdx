@@ -28,17 +28,17 @@ npm i next-cool-action
 
 You can create a new client with the following code:
 
-```typescript title="src/lib/safe-action.ts"
-import { createSafeActionClient } from "next-cool-action";
+```typescript title="src/lib/cool-action.ts"
+import { createCoolActionClient } from "next-cool-action";
 
-export const actionClient = createSafeActionClient();
+export const actionClient = createCoolActionClient();
 ```
 
 This is a basic client, without any options or middleware functions. If you want to explore the full set of options, check out the [create the client](/docs/define-actions/create-the-client) section.
 
 ### 2. Define a new action
 
-This is how a safe action is created. Providing a validation input schema to the function via [`inputSchema()`](/docs/define-actions/instance-methods#inputschema), we're sure that data that comes in is type safe and validated.
+This is how a cool action is created. Providing a validation input schema to the function via [`inputSchema()`](/docs/define-actions/instance-methods#inputschema), we're sure that data that comes in is type safe and validated.
 The [`action()`](/docs/define-actions/instance-methods#action--stateaction) method lets you define what happens on the server when the action is called from client, via an async function that receives the parsed input and context as arguments. In short, this is your _server code_. **It never runs on the client.
 
 In this documentation, we'll use the Zod library to define our validation logic, but feel free to use any other library that implements the [Standard Schema](https://github.com/standard-schema/standard-schema) specification.
@@ -48,7 +48,7 @@ In this documentation, we'll use the Zod library to define our validation logic,
 
 import { z } from "zod";
 import { returnValidationErrors } from "next-cool-action";
-import { actionClient } from "@/lib/safe-action";
+import { actionClient } from "@/lib/cool-action";
 
 // This schema is used to validate input from client.
 const inputSchema = z.object({
@@ -83,7 +83,7 @@ export default function Login() {
   return (
     <button
       onClick={async () => {
-        // Typesafe action called from client.
+        // Typecool action called from client.
         const res = await loginUser({
           username: "johndoe",
           password: "123456",

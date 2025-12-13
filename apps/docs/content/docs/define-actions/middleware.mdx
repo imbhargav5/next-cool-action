@@ -17,11 +17,11 @@ You can chain multiple middleware functions, that will be executed in the order 
 
 Instance level is the right place when you want to share middleware behavior for all the actions you're going to define; for example when you need to log the result of actions execution, or verify if the user intending to execute the operation is authorized to do so, and if not, halt the execution at that point, by throwing an error.
 
-Here we'll use a logging middleware in the base client and then extend it with an authorization middleware in `authActionClient`. We'll also define a safe action called `editProfile`, that will use `authActionClient` as its client. Note that the `handleServerError` function passed to the base client will also be used for `authActionClient`:
+Here we'll use a logging middleware in the base client and then extend it with an authorization middleware in `authActionClient`. We'll also define a cool action called `editProfile`, that will use `authActionClient` as its client. Note that the `handleServerError` function passed to the base client will also be used for `authActionClient`:
 
-```typescript title="src/lib/safe-action.ts"
+```typescript title="src/lib/cool-action.ts"
 import {
-  createSafeActionClient,
+  createCoolActionClient,
   DEFAULT_SERVER_ERROR_MESSAGE,
 } from "next-cool-action";
 import { cookies } from "next/headers";
@@ -31,7 +31,7 @@ import { getUserIdFromSessionId } from "./db";
 class ActionError extends Error {}
 
 // Base client.
-const actionClient = createSafeActionClient({
+const actionClient = createCoolActionClient({
   defineMetadataSchema() {
     return z.object({
       actionName: z.string(),
@@ -95,7 +95,7 @@ Here we import `authActionClient` in the action's file:
 ```typescript title="src/app/edituser-action.ts"
 "use server";
 
-import { authActionClient } from "@/lib/safe-action";
+import { authActionClient } from "@/lib/cool-action";
 import { z } from "zod";
 
 const editProfile = authActionClient
@@ -122,7 +122,7 @@ In this example we'll use the same `authActionClient` defined above to define a 
 ```typescript title="src/app/deleteuser-action.ts"
 "use server";
 
-import { authActionClient } from "@/lib/safe-action";
+import { authActionClient } from "@/lib/cool-action";
 import { z } from "zod";
 
 const deleteUser = authActionClient
@@ -159,7 +159,7 @@ If a regular user tries to do the same, the execution will be stopped at the las
 
 ## `middlewareFn` return value
 
-`middlewareFn` returns a Promise of a `MiddlewareResult` object. It extends the result of a safe action with `success` property, and `parsedInput`, `bindArgsParsedInputs` and `ctx` optional properties. This is the exact return type of the `next` function, so you must always return it (or its result) to continue executing the middleware chain.
+`middlewareFn` returns a Promise of a `MiddlewareResult` object. It extends the result of a cool action with `success` property, and `parsedInput`, `bindArgsParsedInputs` and `ctx` optional properties. This is the exact return type of the `next` function, so you must always return it (or its result) to continue executing the middleware chain.
 
 ## Extend context
 
@@ -167,10 +167,10 @@ Context is a special object that holds information about the current execution s
 
 Starting from version 7.6.0, context is extended by default when defining middleware functions. For instance, if you want both the `sessionId` and `userId` in the context, by using two different middleware functions (trivial example), you can do it like this:
 
-```typescript title="src/lib/safe-action.ts"
-import { createSafeActionClient } from "next-cool-action";
+```typescript title="src/lib/cool-action.ts"
+import { createCoolActionClient } from "next-cool-action";
 
-export const actionClient = createSafeActionClient()
+export const actionClient = createCoolActionClient()
   .use(async ({ next }) => {
     const sessionId = await getSessionId();
     return next({ ctx: { sessionId } })
@@ -191,7 +191,7 @@ And then use the client to define an action:
 ```typescript title="src/app/test-action.ts"
 "use server";
 
-import { actionClient } from "@/lib/safe-action";
+import { actionClient } from "@/lib/cool-action";
 
 export const testAction = actionClient
   .action(async ({ ctx }) => {
@@ -208,11 +208,11 @@ Thanks to this feature, and the previously mentioned [context extension](#extend
 
 Here's how to use `createMiddleware()`:
 
-```typescript title="src/lib/safe-action.ts"
-import { createSafeActionClient, createMiddleware } from "next-cool-action";
+```typescript title="src/lib/cool-action.ts"
+import { createCoolActionClient, createMiddleware } from "next-cool-action";
 import { z } from "zod";
 
-export const actionClient = createSafeActionClient({
+export const actionClient = createCoolActionClient({
   defineMetadataSchema: () => z.object({
     actionName: z.string(),
   }),

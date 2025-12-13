@@ -3,12 +3,12 @@
 import assert from "node:assert";
 import { test } from "node:test";
 import { z } from "zod";
-import { createSafeActionClient, DEFAULT_SERVER_ERROR_MESSAGE } from "..";
+import { createCoolActionClient, DEFAULT_SERVER_ERROR_MESSAGE } from "..";
 import { ActionBindArgsValidationError } from "../validation-errors";
 
 // Default client tests.
 
-const dac = createSafeActionClient();
+const dac = createCoolActionClient();
 
 test("action with invalid bind args input and valid main input gives back a server error", async () => {
 	const schema = z.object({
@@ -43,7 +43,7 @@ test("action with invalid bind args input and valid main input gives back a serv
 
 // Unmasked server error client.
 
-const uac = createSafeActionClient({
+const uac = createCoolActionClient({
 	handleServerError(error) {
 		if (error instanceof ActionBindArgsValidationError) {
 			return {

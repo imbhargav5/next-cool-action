@@ -33,7 +33,7 @@ This document provides a deep dive into the React hooks provided by next-cool-ac
 ┌─────────────────────────────────────────────────────────────────────────────────┐
 │                                                                                  │
 │   const [isTransitioning, startTransition] = useTransition();                    │
-│   const [result, setResult] = useState<SafeActionResult>({});                    │
+│   const [result, setResult] = useState<CoolActionResult>({});                    │
 │   const [clientInput, setClientInput] = useState<Input>();                       │
 │   const [isExecuting, setIsExecuting] = useState(false);                         │
 │   const [navigationError, setNavigationError] = useState<Error | null>(null);    │
@@ -161,7 +161,7 @@ This document provides a deep dive into the React hooks provided by next-cool-ac
     │      │                                                                      │
     │      └──▶ optimisticState = [A, B, C_temp]   ◀── IMMEDIATE UI UPDATE       │
     │                                                                             │
-    │   2. safeActionFn(input)         ◀── Server call starts                     │
+    │   2. coolActionFn(input)         ◀── Server call starts                     │
     │                                                                             │
     └────────────────────────────────────────────────────────────────────────────┘
             │
@@ -201,7 +201,7 @@ This document provides a deep dive into the React hooks provided by next-cool-ac
 │                                                                                  │
 │     startTransition(() => {                                                      │
 │       setOptimisticValue(input);    // ◀── Optimistic update FIRST              │
-│       safeActionFn(input)           // ◀── Then server call                      │
+│       coolActionFn(input)           // ◀── Then server call                      │
 │         .then(...)                                                               │
 │         .catch(...)                                                              │
 │         .finally(...);                                                           │
@@ -258,7 +258,7 @@ This document provides a deep dive into the React hooks provided by next-cool-ac
 │   │   └─▶ Fire-and-forget execution                                          │   │
 │   │   └─▶ Updates state, triggers callbacks                                  │   │
 │   │                                                                          │   │
-│   │   executeAsync: (input) => Promise<SafeActionResult>                     │   │
+│   │   executeAsync: (input) => Promise<CoolActionResult>                     │   │
 │   │   └─▶ Awaitable execution                                                │   │
 │   │   └─▶ Returns result directly                                            │   │
 │   │   └─▶ Also updates state and triggers callbacks                          │   │
@@ -277,7 +277,7 @@ This document provides a deep dive into the React hooks provided by next-cool-ac
 │   │   input: InferInputOrDefault<S, undefined>                               │   │
 │   │   └─▶ Last input passed to execute                                       │   │
 │   │                                                                          │   │
-│   │   result: SafeActionResult<ServerError, S, CVE, Data>                    │   │
+│   │   result: CoolActionResult<ServerError, S, CVE, Data>                    │   │
 │   │   └─▶ { data?, serverError?, validationErrors? }                         │   │
 │   │                                                                          │   │
 │   │   status: HookActionStatus                                               │   │
@@ -766,7 +766,7 @@ This document provides a deep dive into the React hooks provided by next-cool-ac
     │     // Everything inside here is a "transition"                              │
     │     // React knows this is low-priority and interruptible                    │
     │                                                                              │
-    │     safeActionFn(input)                                                      │
+    │     coolActionFn(input)                                                      │
     │       .then((res) => {                                                       │
     │         setResult(res ?? {});       ◀── These updates are batched            │
     │       })                                and deferred by React                │

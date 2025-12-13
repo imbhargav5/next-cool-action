@@ -1,9 +1,9 @@
 import { actionBuilder } from "./action-builder";
 import type {
+    CoolActionClientArgs,
+    CoolActionUtils,
     DVES,
     MiddlewareFn,
-    SafeActionClientArgs,
-    SafeActionUtils,
     ServerCodeFn,
     StateServerCodeFn,
 } from "./index.types";
@@ -14,7 +14,7 @@ import type {
     ValidationErrors,
 } from "./validation-errors.types";
 
-export class SafeActionClient<
+export class CoolActionClient<
 	ServerError,
 	ODVES extends DVES | undefined, // override default validation errors shape
 	MetadataSchema extends StandardSchemaV1 | undefined = undefined,
@@ -27,10 +27,10 @@ export class SafeActionClient<
 	const BAS extends readonly StandardSchemaV1[] = [],
 	CVE = undefined,
 > {
-	readonly #args: SafeActionClientArgs<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, ISF, IS, OS, BAS, CVE>;
+	readonly #args: CoolActionClientArgs<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, ISF, IS, OS, BAS, CVE>;
 
 	constructor(
-		args: SafeActionClientArgs<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, ISF, IS, OS, BAS, CVE>
+		args: CoolActionClientArgs<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, ISF, IS, OS, BAS, CVE>
 	) {
 		this.#args = args;
 	}
@@ -43,8 +43,8 @@ export class SafeActionClient<
 	 */
 	use<NextCtx extends object>(
 		middlewareFn: MiddlewareFn<ServerError, MD, Ctx, Ctx & NextCtx>
-	): SafeActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx & NextCtx, ISF, IS, OS, BAS, CVE> {
-		return new SafeActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx & NextCtx, ISF, IS, OS, BAS, CVE>({
+	): CoolActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx & NextCtx, ISF, IS, OS, BAS, CVE> {
+		return new CoolActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx & NextCtx, ISF, IS, OS, BAS, CVE>({
 			...this.#args,
 			middlewareFns: [...this.#args.middlewareFns, middlewareFn],
 			ctxType: {} as Ctx & NextCtx,
@@ -57,8 +57,8 @@ export class SafeActionClient<
 	 *
 	 * {@link https://next-cool-action.dev/docs/define-actions/instance-methods#metadata See docs for more information}
 	 */
-	metadata(data: MD): SafeActionClient<ServerError, ODVES, MetadataSchema, MD, true, Ctx, ISF, IS, OS, BAS, CVE> {
-		return new SafeActionClient<ServerError, ODVES, MetadataSchema, MD, true, Ctx, ISF, IS, OS, BAS, CVE>({
+	metadata(data: MD): CoolActionClient<ServerError, ODVES, MetadataSchema, MD, true, Ctx, ISF, IS, OS, BAS, CVE> {
+		return new CoolActionClient<ServerError, ODVES, MetadataSchema, MD, true, Ctx, ISF, IS, OS, BAS, CVE>({
 			...this.#args,
 			metadata: data,
 			metadataProvided: true,
@@ -86,7 +86,7 @@ export class SafeActionClient<
 		utils?: {
 			handleValidationErrorsShape?: HandleValidationErrorsShapeFn<AIS, BAS, MD, Ctx, OCVE>;
 		}
-	): SafeActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, () => Promise<AIS>, AIS, OS, BAS, OCVE> {
+	): CoolActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, () => Promise<AIS>, AIS, OS, BAS, OCVE> {
 		const newInputSchemaFn = ((inputSchema as unknown as { [Symbol.toStringTag]?: string })[Symbol.toStringTag] === "AsyncFunction"
 			? async () => {
 					const prevSchema = await this.#args.inputSchemaFn?.();
@@ -94,7 +94,7 @@ export class SafeActionClient<
 				}
 			: async () => inputSchema) as () => Promise<AIS>;
 
-		return new SafeActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, () => Promise<AIS>, AIS, OS, BAS, OCVE>({
+		return new CoolActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, () => Promise<AIS>, AIS, OS, BAS, OCVE>({
 			...this.#args,
 			inputSchemaFn: newInputSchemaFn,
 			handleValidationErrorsShape: (utils?.handleValidationErrorsShape ??
@@ -110,8 +110,8 @@ export class SafeActionClient<
 	 */
 	bindArgsSchemas<const OBAS extends readonly StandardSchemaV1[]>(
 		bindArgsSchemas: OBAS
-	): SafeActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, ISF, IS, OS, OBAS, CVE> {
-		return new SafeActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, ISF, IS, OS, OBAS, CVE>({
+	): CoolActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, ISF, IS, OS, OBAS, CVE> {
+		return new CoolActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, ISF, IS, OS, OBAS, CVE>({
 			...this.#args,
 			bindArgsSchemas,
 			handleValidationErrorsShape: this.#args.handleValidationErrorsShape as unknown as HandleValidationErrorsShapeFn<
@@ -132,8 +132,8 @@ export class SafeActionClient<
 	 */
 	outputSchema<OOS extends StandardSchemaV1>(
 		dataSchema: OOS
-	): SafeActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, ISF, IS, OOS, BAS, CVE> {
-		return new SafeActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, ISF, IS, OOS, BAS, CVE>({
+	): CoolActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, ISF, IS, OOS, BAS, CVE> {
+		return new CoolActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, ISF, IS, OOS, BAS, CVE>({
 			...this.#args,
 			outputSchema: dataSchema,
 		});
@@ -148,10 +148,10 @@ export class SafeActionClient<
 	 */
 	action<Data extends InferOutputOrDefault<OS, any>>(
 		this: MDProvided extends true
-			? SafeActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, ISF, IS, OS, BAS, CVE>
+			? CoolActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, ISF, IS, OS, BAS, CVE>
 			: never,
 		serverCodeFn: ServerCodeFn<MD, Ctx, IS, BAS, Data>,
-		utils?: SafeActionUtils<ServerError, MD, Ctx, IS, BAS, CVE, Data>
+		utils?: CoolActionUtils<ServerError, MD, Ctx, IS, BAS, CVE, Data>
 	) {
 		return actionBuilder(this.#args).action(serverCodeFn, utils);
 	}
@@ -166,10 +166,10 @@ export class SafeActionClient<
 	 */
 	stateAction<Data extends InferOutputOrDefault<OS, any>>(
 		this: MDProvided extends true
-			? SafeActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, ISF, IS, OS, BAS, CVE>
+			? CoolActionClient<ServerError, ODVES, MetadataSchema, MD, MDProvided, Ctx, ISF, IS, OS, BAS, CVE>
 			: never,
 		serverCodeFn: StateServerCodeFn<ServerError, MD, Ctx, IS, BAS, CVE, Data>,
-		utils?: SafeActionUtils<ServerError, MD, Ctx, IS, BAS, CVE, Data>
+		utils?: CoolActionUtils<ServerError, MD, Ctx, IS, BAS, CVE, Data>
 	) {
 		return actionBuilder(this.#args).stateAction(serverCodeFn, utils);
 	}

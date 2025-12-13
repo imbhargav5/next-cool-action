@@ -2,7 +2,7 @@
 
 import assert from "node:assert";
 import { test } from "node:test";
-import { DEFAULT_SERVER_ERROR_MESSAGE, createSafeActionClient } from "..";
+import { DEFAULT_SERVER_ERROR_MESSAGE, createCoolActionClient } from "..";
 
 class ActionError extends Error {
 	constructor(message: string) {
@@ -10,7 +10,7 @@ class ActionError extends Error {
 	}
 }
 
-const ac1 = createSafeActionClient({
+const ac1 = createCoolActionClient({
 	handleServerError(e) {
 		// disable server error logging for these tests
 		if (e instanceof ActionError) {
@@ -103,7 +103,7 @@ test("error occurred with `throwServerError` set to true at the action level thr
 });
 
 // Server error is an object with a 'message' property.
-const ac2 = createSafeActionClient({
+const ac2 = createCoolActionClient({
 	handleServerError(e) {
 		// disable server errors logging for these tests
 		return {
@@ -148,7 +148,7 @@ test("error occurred in middleware function has the correct shape defined by `ha
 });
 
 // Rethrow all server errors.
-const ac3 = createSafeActionClient({
+const ac3 = createCoolActionClient({
 	handleServerError(e) {
 		// disable server error logging for these tests
 		throw e;

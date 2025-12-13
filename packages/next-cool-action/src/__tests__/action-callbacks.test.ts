@@ -3,9 +3,9 @@
 import assert from "node:assert";
 import { test } from "node:test";
 import { z } from "zod";
-import { DEFAULT_SERVER_ERROR_MESSAGE, createSafeActionClient, returnValidationErrors } from "..";
+import { DEFAULT_SERVER_ERROR_MESSAGE, createCoolActionClient, returnValidationErrors } from "..";
 
-const ac = createSafeActionClient({
+const ac = createCoolActionClient({
 	defineMetadataSchema() {
 		return z.object({
 			actionName: z.string(),

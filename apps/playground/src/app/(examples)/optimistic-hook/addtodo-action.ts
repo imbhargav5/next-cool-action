@@ -1,6 +1,6 @@
 "use server";
 
-import { ActionError, action } from "@/lib/safe-action";
+import { ActionError, action } from "@/lib/cool-action";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 

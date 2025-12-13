@@ -708,7 +708,7 @@ export function returnValidationErrors<
     CUSTOM handleServerError Example:
     ─────────────────────────────────
 
-    createSafeActionClient({
+    createCoolActionClient({
       handleServerError: (e, { metadata }) => {
         // Log with context
         console.error(`[${metadata.actionName}] Error:`, e.message);
@@ -761,7 +761,7 @@ export function returnValidationErrors<
     ────────────────────────────────
 
     // Set at client level:
-    createSafeActionClient({
+    createCoolActionClient({
       throwValidationErrors: true
     })
 
@@ -841,7 +841,7 @@ export function returnValidationErrors<
 You can provide a custom function to reshape validation errors:
 
 ```typescript
-const action = createSafeActionClient()
+const action = createCoolActionClient()
   .inputSchema(
     z.object({ email: z.string().email() }),
     {
