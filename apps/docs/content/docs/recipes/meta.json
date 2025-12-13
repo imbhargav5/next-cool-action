@@ -1,0 +1,9 @@
+{
+  "title": "Recipes",
+  "pages": [
+    "playground",
+    "form-actions",
+    "upload-files",
+    "i18n"
+  ]
+}

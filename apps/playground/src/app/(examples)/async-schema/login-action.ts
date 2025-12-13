@@ -4,11 +4,13 @@ import { action } from "@/lib/safe-action";
 import { flattenValidationErrors, returnValidationErrors } from "next-cool-action";
 import { z } from "zod";
 
+const schema = z.object({
+	username: z.string().min(3).max(10),
+	password: z.string().min(8).max(100),
+});
+
 async function getSchema() {
-	return z.object({
-		username: z.string().min(3).max(10),
-		password: z.string().min(8).max(100),
-	});
+	return schema;
 }
 
 export const loginUser = action
@@ -16,26 +18,30 @@ export const loginUser = action
 	.inputSchema(getSchema, {
 		// Here we use the `flattenValidationErrors` function to customize the returned validation errors
 		// object to the client.
-		handleValidationErrorsShape: async (ve) => flattenValidationErrors(ve).fieldErrors,
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		handleValidationErrorsShape: async (ve: any) => flattenValidationErrors(ve).fieldErrors,
 	})
-	.action(async ({ parsedInput: { username, password } }) => {
-		if (username === "johndoe") {
-			returnValidationErrors(getSchema, {
+	.action(
+		async ({ parsedInput: { username, password } }) => {
+			if (username === "johndoe") {
+				returnValidationErrors(schema, {
+					username: {
+						_errors: ["user_suspended"],
+					},
+				});
+			}
+
+			if (username === "user" && password === "password") {
+				return {
+					success: true,
+				};
+			}
+
+			returnValidationErrors(schema, {
 				username: {
-					_errors: ["user_suspended"],
+					_errors: ["incorrect_credentials"],
 				},
 			});
-		}
-
-		if (username === "user" && password === "password") {
-			return {
-				success: true,
-			};
-		}
-
-		returnValidationErrors(getSchema, {
-			username: {
-				_errors: ["incorrect_credentials"],
-			},
-		});
-	});
+		},
+		{}
+	);

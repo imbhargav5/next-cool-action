@@ -1,0 +1,30 @@
+{
+  "name": "@apps/docs",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "fumadocs-mdx && next build",
+    "start": "next start",
+    "typecheck": "fumadocs-mdx && tsc --noEmit"
+  },
+  "dependencies": {
+    "fumadocs-core": "^16.0.4",
+    "fumadocs-mdx": "^14.1.0",
+    "fumadocs-ui": "^16.2.4",
+    "lucide-react": "^0.469.0",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.17",
+    "@types/mdx": "^2.0.13",
+    "@types/node": "^22.14.0",
+    "@types/react": "^19.1.6",
+    "@types/react-dom": "^19.1.6",
+    "postcss": "^8.5.4",
+    "tailwindcss": "^4.1.17",
+    "typescript": "catalog:"
+  }
+}

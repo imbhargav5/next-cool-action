@@ -1,0 +1,20 @@
+{
+  "title": "Documentation",
+  "pages": [
+    "index",
+    "getting-started",
+    "---Define Actions---",
+    "define-actions",
+    "---Execute Actions---",
+    "execute-actions",
+    "---Recipes---",
+    "recipes",
+    "---Integrations---",
+    "integrations",
+    "---Types---",
+    "types",
+    "---",
+    "troubleshooting",
+    "contributing"
+  ]
+}
