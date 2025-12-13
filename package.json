@@ -9,7 +9,7 @@
 		"docs": "turbo run dev --filter=@apps/docs",
 		"typecheck": "turbo run typecheck",
 		"lint": "turbo run lint",
-		"build": "turbo run build --filter=!@apps/playground",
+		"build": "turbo run build",
 		"test:lib": "turbo run test --filter=next-cool-action",
 		"typecheck:lib": "turbo run typecheck --filter=next-cool-action",
 		"lint:lib": "turbo run lint --filter=next-cool-action",
