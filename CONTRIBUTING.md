@@ -1,89 +1,128 @@
 # Contributing to next-cool-action
 
-Code contributions are very welcome, so if you decide to help improve the library code, thank you! First of all, though, please read the guidelines below.
+Thank you for your interest in contributing to next-cool-action! Please read the guidelines below before opening a pull request.
 
-## Information about the project
+## Project Information
 
-This is a monorepo, that uses:
+This is a monorepo that uses:
 
-- [pnpm](https://pnpm.io/) as package manager;
-- [Turborepo](https://turbo.build/repo) as build system;
-- [TypeScript](https://www.typescriptlang.org/) as primary language;
-- [ESLint](https://eslint.org/) as linter;
-- [Prettier](https://prettier.io/) as formatter;
-- [Husky](https://github.com/typicode/husky) as Git hooks manager;
-- [Commitizen](https://github.com/commitizen/cz-cli) as commit message manager;
-- [Commitlint](https://commitlint.js.org/) as commit message linter;
-- [semantic-release](https://github.com/semantic-release/semantic-release) as release manager.
-- [Docusaurus](https://docusaurus.io/) for the documentation website.
+- [pnpm](https://pnpm.io/) as package manager
+- [Turborepo](https://turbo.build/repo) as build system
+- [TypeScript](https://www.typescriptlang.org/) as primary language
+- [ESLint](https://eslint.org/) as linter
+- [Prettier](https://prettier.io/) as formatter
+- [Changesets](https://github.com/changesets/changesets) for version management and publishing
+- [Fumadocs](https://fumadocs.vercel.app/) for the documentation site
 
-### What you need to install
+### Prerequisites
 
-- `git`;
-- Node.js LTS version specified in [.nvmrc](./.nvmrc). Highly recommended to use [fnm](https://github.com/Schniz/fnm) or [nvm](https://github.com/nvm-sh/nvm) for easy management of Node.js versions;
-- a code editor: [VS Code](https://code.visualstudio.com) is the recommended one, as it enables workspace specific [settings](./.vscode/settings.json) and [extensions](./.vscode/extensions.json) to make the development more user-friendly;
-- [`pnpm`](https://pnpm.io/installation) as package manager.
+- `git`
+- Node.js version 22 (see [.nvmrc](./.nvmrc)). Recommended to use [fnm](https://github.com/Schniz/fnm) or [nvm](https://github.com/nvm-sh/nvm) for managing Node.js versions
+- [pnpm](https://pnpm.io/installation) (version 10.14.0 or compatible)
+- [VS Code](https://code.visualstudio.com) is recommended, as the repository includes workspace-specific [settings](./.vscode/settings.json) and [extensions](./.vscode/extensions.json)
 
-### Repository structure
+### Repository Structure
 
-- [`packages/next-cool-action`](./packages/next-cool-action): contains the source code of the library;
-- [`apps/playground`](./apps/playground): contains the source code of the Next.js playground app, which is a basic implementation of the library;
-- [`website`](./website): contains the source code of the [next-cool-action website](https://next-cool-action.dev).
+```
+packages/
+  next-cool-action/               # Main library - type-safe Next.js Server Actions
+  adapter-react-hook-form/        # Integration adapter for react-hook-form
 
-## How to contribute
-
-### Getting started
-
-Before opening a pull request, please follow the general rule of **opening an issue or discussion first**, using the [issue templates](https://github.com/bhargavponnapalli/next-cool-action/issues/new/choose), that will guide you through the process. You can avoid opening a new issue or discussion if:
-
-- You're correcting a trivial error, like a typo;
-- The issue or discussion for the bug you're fixing/feature you're implementing with the PR is already open.
-
-### Development setup
-
-After forking, cloning the repository and optionally creating a new branch from the base one, you can install the dependencies using `pnpm` in the project root directory:
-
-```sh
-pnpm install
+apps/
+  playground/                     # Demo Next.js app showing library usage
+  docs/                           # Documentation site (Fumadocs)
 ```
 
-Then, you can run the `build:lib` command to rebuild the library code, and then test it in the playground app:
+## How to Contribute
 
-```sh
-pnpm run build:lib && pnpm run pg
-```
+### Before Contributing
+
+Before opening a pull request, please follow the general rule of **opening an issue or discussion first**, using the [issue templates](https://github.com/imbhargav5/next-cool-action/issues/new/choose). You can skip this step if:
+
+- You're correcting a trivial error, like a typo
+- An issue or discussion for the change already exists
+
+### Development Setup
+
+1. Fork and clone the repository, then install dependencies:
+
+   ```sh
+   pnpm install
+   ```
+
+2. Build the library packages and run the playground app:
+
+   ```sh
+   pnpm run build:lib && pnpm run pg
+   ```
+
+3. Run the documentation site locally:
+
+   ```sh
+   pnpm run docs
+   ```
+
+4. Run tests:
+
+   ```sh
+   pnpm run test:lib
+   ```
+
+5. Run linting:
+
+   ```sh
+   pnpm run lint:lib
+   ```
 
 > [!TIP]
-> If you see many type errors in the playground app after running the `build:lib` command, try to restart the TS Server of VS Code. This should fix the errors.
+> If you see type errors in the playground app after running `build:lib`, try restarting the TypeScript server in VS Code.
 
-If you updated user facing APIs of the library, you're **not required**, but **highly incouraged** to:
-- update [the documentation](./website/docs) of the library to reflect the changes you've made.
-- write tests for the changes you've made. They should be placed in the appropriate file inside [`__tests__`](./packages/next-cool-action/src/__tests__) directory (`next-cool-action` package).
+### Making Changes
 
-These steps can be done in later stages of the PR too, for instance when a maintainer already approved your code updates.
+When updating user-facing APIs, you are encouraged (but not required) to:
 
-Note that the [`website`](./website) project is not part of the monorepo packages, so you need to `cd` into it and then run this command to install its dependencies:
+- Update the documentation in [`apps/docs/content/docs/`](./apps/docs/content/docs/)
+- Write tests in [`packages/next-cool-action/src/__tests__/`](./packages/next-cool-action/src/__tests__/)
 
-```sh
-pnpm install
-```
+These can be done in later stages of the PR after your code changes are approved.
 
-Then you can start the Docusaurus development server with:
+### Creating a Changeset
 
-```sh
-pnpm run start
-```
-
-### Committing changes
-
-Once you're done with your code changes, you can finally commit and push them to the remote repository.
-
-Committing is very easy, thanks to both `commitizen` and `commitlint` utilities. Each commit message **must** follow the [Conventional Commits](https://www.conventionalcommits.org/) format, to allow for automated release management via `semantic-release`. You can commit your code using:
+For changes that affect published packages (`next-cool-action` or `@next-cool-action/adapter-react-hook-form`), create a changeset:
 
 ```sh
-git commit --no-edit
+pnpm changeset
 ```
 
-This command will bring up the `commitizen` interface to help you write a proper commit message, without also bringing up the default editor. If you want to, you can set up an alias for it, to make it easier to type and remember. The commit message is then run through `commitlint` to validate it.
+Follow the prompts to select the affected packages and describe your changes. Changesets automate versioning and changelog generation when your PR is merged.
 
-Changes made in `website` or `playground` scopes **must** be typed `chore(<scope>)`, since they are not part of the library code.
+### Committing Changes
+
+Use [Conventional Commits](https://www.conventionalcommits.org/) format for commit messages:
+
+- `feat:` - new features
+- `fix:` - bug fixes
+- `docs:` - documentation changes
+- `chore:` - maintenance tasks (playground, docs site, CI)
+- `refactor:` - code refactoring
+- `test:` - adding or updating tests
+
+Examples:
+```
+feat: add retry option to action client
+fix: resolve validation error formatting issue
+docs: update middleware documentation
+chore(playground): add new example for file uploads
+```
+
+### Pull Requests
+
+1. Push your branch to your fork
+2. Open a pull request against `main`
+3. CI will automatically run linting and tests
+4. Wait for review from maintainers
+
+### CI/CD
+
+- **Pull requests**: Runs `lint:lib` and `test:lib` on changes to packages
+- **Merges to main**: Runs tests, then Changesets creates a release PR or publishes to npm if changesets exist
